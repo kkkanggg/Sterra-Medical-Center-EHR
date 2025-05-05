@@ -204,27 +204,12 @@
   <div class="dashboard">
     <table>
       <thead>
-        <tr>
-          <th>DATE</th>
-          <th colspan="4">04/09/2025</th>
-          <th colspan="4">04/10/2025</th>
-        </tr>
+        
       </thead>
       <tbody>
         <tr>
-          <td>SHIFT</td>
-          <td class="editable" contenteditable="true">AM</td>
-          <td class="editable" contenteditable="true">PM</td>
-          <td class="editable" contenteditable="true">NIGHT</td>
-          <td class="editable" contenteditable="true">PRN</td>
-          <td class="editable" contenteditable="true">AM</td>
-          <td class="editable" contenteditable="true">PM</td>
-          <td class="editable" contenteditable="true">NIGHT</td>
-          <td class="editable" contenteditable="true">PRN</td>
-        </tr>
-        <tr>
-          <td>TIME TAKEN</td>
-          <td class="editable" contenteditable="true">10:45</td>
+          <td class="blood-pressure">TIME</td>
+          <td class="editable" contenteditable="true">10:57 AM</td>
           <td class="editable" contenteditable="true"></td>
           <td class="editable" contenteditable="true"></td>
           <td class="editable" contenteditable="true"></td>
@@ -302,6 +287,373 @@
       </tbody>
     </table>
   </div>
+<script>
+function addNewColumn() {
+    const rows = document.querySelectorAll("tbody tr");
+    
+    // Find the first empty column
+    let emptyColumnIndex = -1;
+    const firstRow = rows[1]; // Time row
+    
+    for (let i = 1; i < firstRow.cells.length; i++) {
+        if (firstRow.cells[i].textContent.trim() === "") {
+            emptyColumnIndex = i;
+            break;
+        }
+    }
+    
+    if (emptyColumnIndex !== -1) {
+        // Use the first empty column
+        firstRow.cells[emptyColumnIndex].textContent = getCurrentTime();
+        // Only set the date if it's the first empty column
+        if (rows[0].cells[emptyColumnIndex].textContent.trim() === "") {
+            rows[0].cells[emptyColumnIndex].textContent = getCurrentDate();
+        }
+    } else {
+        // Add a new column to all rows
+        rows.forEach(row => {
+            const newCell = document.createElement("td");
+            newCell.classList.add("editable");
+            newCell.setAttribute("contenteditable", "true");
+            
+            // Set date and time for the first two rows
+            if (row === rows[0]) {
+                newCell.textContent = getCurrentDate();
+            } else if (row === rows[1]) {
+                newCell.textContent = getCurrentTime();
+            }
+            
+            row.appendChild(newCell);
+            
+            // Add event listeners if it's editable
+            if (newCell.classList.contains("editable")) {
+                newCell.setAttribute("data-original-value", newCell.textContent);
+                newCell.addEventListener("focus", onCellFocus);
+                newCell.addEventListener("blur", onCellBlur);
+                newCell.addEventListener("keydown", function(e) {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        this.blur();
+                    }
+                });
+            }
+        });
+        
+        // Apply the background colors to maintain pattern
+        applyBackgroundColors();
+    }
+}
+
+function onCellBlur(e) {
+    const cell = e.target;
+    const originalValue = cell.getAttribute("data-original-value");
+    const newValue = cell.textContent.trim();
+    
+    // If the value has changed
+    if (newValue !== originalValue) {
+        const columnIndex = getColumnIndex(cell);
+        const timeRow = document.querySelectorAll("tbody tr")[1]; // time row (after date row)
+        const timeCell = timeRow.cells[columnIndex];
+        
+        // Update time to current time
+        timeCell.textContent = getCurrentTime();
+        
+        // Update original value for future edits
+        cell.setAttribute("data-original-value", newValue);
+    }
+}
+
+</script>
+
+  
+<script>
+  window.onload = function () {
+      let username = localStorage.getItem("nurseName");
+
+      if (username) {
+          document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+              el.textContent = username;
+          });
+      }
+  };
+
+  document.addEventListener("DOMContentLoaded", function () {
+      // Set up search functionality
+      const searchInput = document.querySelector(".search-box input");
+      const patientCards = document.querySelectorAll(".container-grid1 a");
+
+      // Store original HTML for each card for accurate highlighting
+      patientCards.forEach(card => {
+          card.setAttribute("data-original-html", card.innerHTML);
+      });
+
+      searchInput?.addEventListener("input", function () {
+          const searchText = searchInput.value.toLowerCase().trim();
+
+          patientCards.forEach(card => {
+              // Reset to original content first
+              card.innerHTML = card.getAttribute("data-original-html");
+
+              const nameEl = card.querySelector(".name");
+              const numEl = card.querySelector(".patient-number");
+
+              const nameText = nameEl.textContent.toLowerCase();
+              const numText = numEl.textContent.toLowerCase();
+
+              const matches = nameText.includes(searchText) || numText.includes(searchText);
+
+              if (searchText === "") {
+                  card.style.display = "";
+                  return;
+              }
+
+              if (matches) {
+                  card.style.display = "";
+
+                  const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+
+                  highlightText(nameEl, regex);
+                  highlightText(numEl, regex);
+              } else {
+                  card.style.display = "none";
+              }
+          });
+      });
+
+      function highlightText(element, regex) {
+          element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+      }
+
+      // Vital signs monitoring functionality
+      setupVitalSignsTracking();
+  });
+
+  function setupVitalSignsTracking() {
+      const table = document.querySelector("table tbody");
+      if (!table) return;
+
+      // Add date row at the top
+      addDateRow();
+
+      // Track changes in editable cells
+      const editableCells = document.querySelectorAll("td.editable");
+      
+      editableCells.forEach(cell => {
+          // Store original value
+          cell.setAttribute("data-original-value", cell.textContent);
+          
+          // Add event listeners for editing
+          cell.addEventListener("focus", onCellFocus);
+          cell.addEventListener("blur", onCellBlur);
+          cell.addEventListener("keydown", function(e) {
+              if (e.key === "Enter") {
+                  e.preventDefault();
+                  this.blur();
+              }
+          });
+      });
+
+      // Add button to add new column
+      addNewColumnButton();
+  }
+
+  function addDateRow() {
+      // Create new row for date at the top
+      const tbody = document.querySelector("tbody");
+      const dateRow = document.createElement("tr");
+      dateRow.innerHTML = `
+          <td>DATE</td>
+          <td class="editable" contenteditable="true">${getCurrentDate()}</td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+      `;
+      
+      // Insert at the beginning of tbody
+      tbody.insertBefore(dateRow, tbody.firstChild);
+      
+      // Add event listeners to new editable cells
+      const newEditableCells = dateRow.querySelectorAll("td.editable");
+      newEditableCells.forEach(cell => {
+          cell.setAttribute("data-original-value", cell.textContent);
+          cell.addEventListener("focus", onCellFocus);
+          cell.addEventListener("blur", onCellBlur);
+          cell.addEventListener("keydown", function(e) {
+              if (e.key === "Enter") {
+                  e.preventDefault();
+                  this.blur();
+              }
+          });
+      });
+  }
+
+  function getCurrentDate() {
+      const now = new Date();
+      return now.toLocaleDateString('en-US', { 
+          month: '2-digit', 
+          day: '2-digit', 
+          year: 'numeric' 
+      });
+  }
+
+  function getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleTimeString('en-US', { 
+          hour: '2-digit', 
+          minute: '2-digit',
+          hour12: true
+      });
+  }
+
+  function onCellFocus(e) {
+      // Save the original value when focusing
+      e.target.setAttribute("data-original-value", e.target.textContent);
+  }
+
+  function onCellBlur(e) {
+      const cell = e.target;
+      const originalValue = cell.getAttribute("data-original-value");
+      const newValue = cell.textContent.trim();
+      
+      // If the value has changed
+      if (newValue !== originalValue) {
+          const columnIndex = getColumnIndex(cell);
+          const timeRow = document.querySelectorAll("tbody tr")[1]; // time row (after date row)
+          const timeCell = timeRow.cells[columnIndex];
+          
+          // Check if we need to add a new column or update existing
+          if (originalValue === "" && newValue !== "") {
+              // Value added to empty cell
+              if (timeCell.textContent === "") {
+                  timeCell.textContent = getCurrentTime();
+              }
+          } else if (originalValue !== "" && newValue !== "") {
+              // Value edited (update time)
+              timeCell.textContent = getCurrentTime();
+          }
+          
+          // Update original value for future edits
+          cell.setAttribute("data-original-value", newValue);
+      }
+  }
+
+  function getColumnIndex(cell) {
+      const row = cell.parentElement;
+      return Array.from(row.cells).indexOf(cell);
+  }
+
+  function addNewColumnButton() {
+      // Create a floating button
+      const floatingBtn = document.createElement("button");
+      floatingBtn.textContent = "Add New Entry";
+      floatingBtn.style.position = "fixed";
+      floatingBtn.style.bottom = "20px";
+      floatingBtn.style.right = "20px";
+      floatingBtn.style.padding = "10px 15px";
+      floatingBtn.style.backgroundColor = "#695CFE";
+      floatingBtn.style.color = "white";
+      floatingBtn.style.border = "none";
+      floatingBtn.style.borderRadius = "5px";
+      floatingBtn.style.cursor = "pointer";
+      floatingBtn.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+      floatingBtn.style.zIndex = "100";
+      
+      document.body.appendChild(floatingBtn);
+      
+      floatingBtn.addEventListener("click", addNewColumn);
+  }
+
+  function addNewColumn() {
+      const rows = document.querySelectorAll("tbody tr");
+      
+      // Find the first empty column
+      let emptyColumnIndex = -1;
+      const firstRow = rows[1]; // Time row
+      
+      for (let i = 1; i < firstRow.cells.length; i++) {
+          if (firstRow.cells[i].textContent.trim() === "") {
+              emptyColumnIndex = i;
+              break;
+          }
+      }
+      
+      if (emptyColumnIndex !== -1) {
+          // Use the first empty column
+          firstRow.cells[emptyColumnIndex].textContent = getCurrentTime();
+          rows[0].cells[emptyColumnIndex].textContent = getCurrentDate();
+      } else {
+          // Add a new column to all rows
+          rows.forEach(row => {
+              const newCell = document.createElement("td");
+              newCell.classList.add("editable");
+              newCell.setAttribute("contenteditable", "true");
+              
+              // Set date and time for the first two rows
+              if (row === rows[0]) {
+                  newCell.textContent = getCurrentDate();
+              } else if (row === rows[1]) {
+                  newCell.textContent = getCurrentTime();
+              }
+              
+              row.appendChild(newCell);
+              
+              // Add event listeners if it's editable
+              if (newCell.classList.contains("editable")) {
+                  newCell.setAttribute("data-original-value", newCell.textContent);
+                  newCell.addEventListener("focus", onCellFocus);
+                  newCell.addEventListener("blur", onCellBlur);
+                  newCell.addEventListener("keydown", function(e) {
+                      if (e.key === "Enter") {
+                          e.preventDefault();
+                          this.blur();
+                      }
+                  });
+              }
+          });
+          
+          // Apply the background colors to maintain pattern
+          applyBackgroundColors();
+      }
+  }
+
+  function applyBackgroundColors() {
+      const rows = document.querySelectorAll("tbody tr");
+      
+      rows.forEach(row => {
+          const cells = row.querySelectorAll("td");
+          
+          cells.forEach((cell, index) => {
+              if (index === 0) {
+                  // First column keeps its original style
+                  return;
+              }
+              
+              // Apply the alternating colors
+              const colorIndex = (index - 1) % 4;
+              
+              switch (colorIndex) {
+                  case 0:
+                      cell.style.backgroundColor = "#d7c9c3";
+                      break;
+                  case 1:
+                      cell.style.backgroundColor = "#b7d3bb";
+                      break;
+                  case 2:
+                      cell.style.backgroundColor = "#b8bbdb";
+                      break;
+                  case 3:
+                      cell.style.backgroundColor = "#d9cfae";
+                      break;
+              }
+          });
+      });
+  }
+</script>
+
   <script>
     window.onload = function () {
         let username = localStorage.getItem("nurseName");
