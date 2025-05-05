@@ -1,0 +1,621 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="db.css">
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+  <title>Intake and Output Record</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    * {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --body-color: #E4E9f7;
+      --sidebar-color: #FFF;
+      --primary-color: #695CFE;
+      --primary-color-light: #F6F5FF;
+      --toggle-color: #DDD;
+      --text-color: #707070;
+      --base-color: #205781;
+      --dash-color: #f7f6f2;
+
+      --tran-02: all 0.2s ease;
+      --tran-03: all 0.3s ease;
+      --tran-04: all 0.4s ease;
+      --tran-05: all 0.5s ease;
+    }
+
+    html, body {
+      height: 100%;
+      background-color: var(--base-color);
+      overflow: hidden; /* Prevent page scroll */
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0;
+    }
+
+    .dashboard {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      padding: 20px;
+      margin-left: 300px;  /* Leaves space for sidebar */
+      margin-top: 70px;    /* Avoids overlapping the header */
+      width: calc(100% - 300px);
+      height: calc(100vh - 70px); /* Full viewport height minus margin and some padding */
+      box-sizing: border-box;
+      background: var(--dash-color);
+      border-radius: 20px;
+      z-index: 1;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      gap: 24px;
+      overflow-y: auto; /* Enable vertical scroll inside container */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .info-bar {
+      background-color: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 16px;
+      border-radius: 0;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-right: 1px solid #ccc;
+      white-space: nowrap;
+    }
+
+    .info-item:last-child {
+      border-right: none;
+    }
+
+    .info-item span:first-child {
+      margin-right: 4px;
+      font-weight: 700;
+    }
+
+    .info-item .normal {
+      font-weight: 400;
+    }
+
+    .info-patient {
+      flex-grow: 1;
+      min-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .intake-header {
+      background-color: #c0c0c0;
+      font-weight: 700;
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 4px;
+      user-select: none;
+      padding: 4px 0;
+      width: 100%;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    /* Intake table styles */
+    table.intake-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      font-weight: 400;
+      text-align: center;
+      background-color: #fff;
+      color: #000;
+      table-layout: fixed;
+      margin-bottom: 24px;
+    }
+
+    table.intake-table thead tr:first-child th {
+      background-color: #cbd5db;
+      font-weight: 800;
+      font-size: 1.125rem;
+      text-align: center;
+      border: 1px solid black;
+      padding: 4px 0;
+    }
+
+    table.intake-table thead tr:nth-child(2) th {
+      background-color: #cbd5db;
+      font-weight: 800;
+      font-size: 0.875rem;
+      text-align: left;
+      border: 1px solid black;
+      padding: 4px 8px;
+    }
+
+    table.intake-table tbody td {
+      border: 1px solid black;
+      font-size: 0.875rem;
+      color: black;
+      padding: 4px 8px;
+      word-wrap: break-word;
+      vertical-align: top;
+    }
+
+    table.intake-table tbody td.center {
+      text-align: center;
+    }
+
+    table.intake-table tbody td.left {
+      text-align: left;
+    }
+
+    table.intake-table tbody td.time {
+      width: 15%;
+    }
+
+    table.intake-table tbody td.type {
+      width: 25%;
+      text-align: center;
+    }
+
+    table.intake-table tbody td.amount {
+      width: 25%;
+      text-align: center;
+    }
+
+    table.intake-table tbody td.method {
+      width: 15%;
+      text-align: center;
+    }
+
+    table.intake-table tbody td.comments {
+      width: 20%;
+      text-align: left;
+    }
+
+    textarea.comment-input,
+    input.text-input {
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      border: none;
+      outline: none;
+      padding: 4px;
+      box-sizing: border-box;
+      background-color: transparent;
+      color: #000;
+      font-weight: 400;
+      font-size: 0.875rem;
+      font-weight: 400;
+      font-family: inherit;
+      min-height: 40px;
+      max-height: 80px;
+      resize: vertical;
+    }
+
+    textarea.comment-input:focus,
+    input.text-input:focus {
+      outline: 1px solid #695CFE;
+      background-color: #f0f0f0;
+    }
+
+    /* Output table styles */
+    table.output-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background-color: #fff;
+      color: black;
+    }
+
+    table.output-table thead tr:first-child th {
+      background-color: #cbd5db;
+      font-weight: 800;
+      font-size: 1.125rem;
+      text-align: center;
+      border: 1px solid black;
+      padding: 4px 0;
+    }
+
+    table.output-table thead tr:nth-child(2) th {
+      background-color: #cbd5db;
+      font-weight: 800;
+      font-size: 0.875rem;
+      text-align: left;
+      border: 1px solid black;
+      padding: 4px 8px;
+    }
+
+    table.output-table tbody td {
+      border: 1px solid black;
+      font-size: 0.875rem;
+      color: black;
+      padding: 4px 8px;
+      word-wrap: break-word;
+      vertical-align: top;
+    }
+
+    table.output-table tbody td.center {
+      text-align: center;
+    }
+
+    table.output-table tbody td.left {
+      text-align: left;
+    }
+
+    table.output-table tbody td.time {
+      width: 15%;
+    }
+
+    table.output-table tbody td.type {
+      width: 25%;
+      text-align: center;
+    }
+
+    table.output-table tbody td.amount {
+      width: 25%;
+      text-align: center;
+    }
+
+    table.output-table tbody td.method {
+      width: 15%;
+      text-align: center;
+    }
+
+    table.output-table tbody td.comments {
+      width: 20%;
+      text-align: left;
+    }
+
+    /* Make only comments column adjustable width */
+    table.intake-table tbody td:not(.comments),
+    table.output-table tbody td:not(.comments),
+    table.intake-table thead th:not(:last-child),
+    table.output-table thead th:not(:last-child) {
+      width: auto;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 640px) {
+      .info-bar {
+        font-size: 12px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+      table.intake-table,
+      table.output-table {
+        font-size: 12px;
+      }
+      textarea.comment-input,
+      input.text-input {
+        height: 36px;
+        font-size: 12px;
+      }
+      .dashboard {
+        margin-left: 0;
+        margin-top: 0;
+        width: 100%;
+        border-radius: 0;
+        height: calc(100vh - 40px);
+      }
+    }
+    .section-title{
+            display: flex;
+    flex-direction: row;
+    position: fixed;
+    align-items: center;
+    margin-right: 10px;
+    gap: 10px;
+    left: 305px;
+    top: 15px;
+    color: var(--dash-color);
+    z-index: 99;
+        }
+
+        .back-btn img{
+            width: 20px;
+         }
+
+        .forward-btn img{
+            width: 20px;
+        }
+
+        .patient-name{
+            font-size: 25px;
+            margin-left: 850px;
+            color: var(--dash-color);
+            opacity: 0.5;
+        }
+  </style>
+</head>
+<body>
+  <div class="section-title">
+    <div class="back-btn">
+        <a href="cma.html">
+            <img src="las.png" alt="las">
+        </a>
+    </div>
+    <h2 style="font-size: 30px;">INTAKE AND OUTPUT</h2>
+    <div class="forward-btn">
+        <a href="clr.html">
+            <img src="ras.png" alt="ras">
+        </a>
+    </div>
+    <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+</div>
+  <div class="dashboard" role="main" tabindex="0">
+    <div class="info-bar" role="region" aria-label="Patient information">
+      <div class="info-item"><span>DATE:</span><span class="normal">04-09-2025</span></div>
+      <div class="info-item"><span>TIME:</span><span class="normal">10:00 AM</span></div>
+      <div class="info-item info-patient"><span>PATIENT’S NAME:</span><span class="normal">MAGSAYSAY, Theodore P.</span></div>
+      <div class="info-item"><span>ROOM NO. :</span><span class="normal">207</span></div>
+    </div>
+
+    <table class="intake-table" role="table" aria-label="Intake record">
+      <thead>
+        <tr>
+          <th colspan="5" scope="colgroup">INTAKE</th>
+        </tr>
+        <tr>
+          <th scope="col">TIME</th>
+          <th scope="col">TYPE OF FLUID/FOOD</th>
+          <th scope="col">AMOUNT (mL/g)</th>
+          <th scope="col">ROUTE</th>
+          <th scope="col">COMMENTS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="11:00" /></td>
+          <td class="type center"><input class="text-input" type="text" value="Water" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="250 mL" /></td>
+          <td class="method center"><input class="text-input" type="text" value="Oral" /></td>
+          <td class="comments left"><textarea class="comment-input"></textarea></td>
+        </tr>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="11:30" /></td>
+          <td class="type center"><input class="text-input" type="text" value="Breakfast: Lugaw with banana" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="250 g" /></td>
+          <td class="method center"><input class="text-input" type="text" value="Oral" /></td>
+          <td class="comments left"><textarea class="comment-input"></textarea></td>
+        </tr>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="12:30" /></td>
+          <td class="type center"><input class="text-input" type="text" value="Salabat ginger tea" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="200 mL" /></td>
+          <td class="method center"><input class="text-input" type="text" value="Oral" /></td>
+          <td class="comments left"><textarea class="comment-input"></textarea></td>
+        </tr>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="13:30" /></td>
+          <td class="type center"><input class="text-input" type="text" value="Lunch: Boiled camote tops and grilled chicken breast" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="350 g" /></td>
+          <td class="method center"><input class="text-input" type="text" value="Oral" /></td>
+          <td class="comments left"><textarea class="comment-input"></textarea></td>
+        </tr>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="13:50" /></td>
+          <td class="type center"><input class="text-input" type="text" value="Water" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="300 mL" /></td>
+          <td class="method center"><input class="text-input" type="text" value="Oral" /></td>
+          <td class="comments left"><textarea class="comment-input"></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="output-table" role="table" aria-label="Output record">
+      <thead>
+        <tr>
+          <th colspan="5" scope="colgroup">OUTPUT</th>
+        </tr>
+        <tr>
+          <th scope="col">TIME</th>
+          <th scope="col">TYPE OF OUTPUT</th>
+          <th scope="col">AMOUNT (mL/g)</th>
+          <th scope="col">METHOD</th>
+          <th scope="col">COMMENTS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="11:00" /></td>
+          <td class="type center"><input class="text-input" type="text" value="Urinated" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="300 mL" /></td>
+          <td class="method center"><input class="text-input" type="text" value="Urine" /></td>
+          <td class="comments left"><textarea class="comment-input">Clear, light and yellow</textarea></td>
+        </tr>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="11:30" /></td>
+          <td class="type center"><input class="text-input" type="text" value="" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="" /></td>
+          <td class="method center"><input class="text-input" type="text" value="" /></td>
+          <td class="comments left"><textarea class="comment-input"></textarea></td>
+        </tr>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="12:30" /></td>
+          <td class="type center"><input class="text-input" type="text" value="" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="" /></td>
+          <td class="method center"><input class="text-input" type="text" value="" /></td>
+          <td class="comments left"><textarea class="comment-input"></textarea></td>
+        </tr>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="12:50" /></td>
+          <td class="type center"><input class="text-input" type="text" value="Urinated" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="250 mL" /></td>
+          <td class="method center"><input class="text-input" type="text" value="" /></td>
+          <td class="comments left"><textarea class="comment-input">Slightly darker</textarea></td>
+        </tr>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="13:30" /></td>
+          <td class="type center"><input class="text-input" type="text" value="" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="" /></td>
+          <td class="method center"><input class="text-input" type="text" value="" /></td>
+          <td class="comments left"><textarea class="comment-input"></textarea></td>
+        </tr>
+        <tr>
+          <td class="time left"><input class="text-input" type="text" value="13:50" /></td>
+          <td class="type center"><input class="text-input" type="text" value="" /></td>
+          <td class="amount center"><input class="text-input" type="text" value="" /></td>
+          <td class="method center"><input class="text-input" type="text" value="" /></td>
+          <td class="comments left"><textarea class="comment-input"></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    window.onload = function () {
+        let username = localStorage.getItem("nurseName");
+
+        if (username) {
+            document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                el.textContent = username;
+            });
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector(".search-box input");
+        const patientCards = document.querySelectorAll(".container-grid1 a");
+
+        // Store original HTML for each card for accurate highlighting
+        patientCards.forEach(card => {
+            card.setAttribute("data-original-html", card.innerHTML);
+        });
+
+        searchInput.addEventListener("input", function () {
+            const searchText = searchInput.value.toLowerCase().trim();
+
+            patientCards.forEach(card => {
+                // Reset to original content first
+                card.innerHTML = card.getAttribute("data-original-html");
+
+                const nameEl = card.querySelector(".name");
+                const numEl = card.querySelector(".patient-number");
+
+                const nameText = nameEl.textContent.toLowerCase();
+                const numText = numEl.textContent.toLowerCase();
+
+                const matches = nameText.includes(searchText) || numText.includes(searchText);
+
+                if (searchText === "") {
+                    card.style.display = "";
+                    return;
+                }
+
+                if (matches) {
+                    card.style.display = "";
+
+                    const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+
+                    highlightText(nameEl, regex);
+                    highlightText(numEl, regex);
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+        function highlightText(element, regex) {
+            element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+        }
+    });
+</script>
+</head>
+<body>
+<nav class = "sidebar close">
+    <header>
+        <a href="home.html" style="text-decoration:none">
+            <div class="image-text">
+                <span class="image">
+                    <img src="logo.png" alt="logo">
+                </span>
+
+                <div class="text header-text">
+                    <span class="title">Sterra Medical Center</span>
+                    <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                </div>
+            </div>
+        </a>
+
+    </header>
+    <div class="menu-bar">
+        <div class="menu">
+            <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="Search" placeholder="Search...">
+            </li>
+            <ul class="menu-links">
+                <li class="nav-link">
+                    <a href="db.html">
+                        <i class='bx bxs-dashboard icon'></i>
+                        <span class="text nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <div class="dd">
+                    <li class="nav-link">
+                        <a href="">
+                            <i class='bx bx-folder-open icon'></i>
+                            <span class="text nav-text">Charts</span>
+                        </a>
+                        <div class="dd-content">
+                            <a href="c.html">Patient List</a>
+                            <a href="ap.html">Add a patient</a>
+                        </div>
+                    </li>
+                </div>
+                <li class="nav-link">
+                    <a href="am.html">
+                        <i class='bx bx-calendar icon'></i>
+                        <span class="text nav-text">Appointment</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="f.html">
+                        <i class='bx bx-receipt icon'></i>
+                        <span class="text nav-text">Finances</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bottom-content">
+            <li class="">
+                <a href="login.html">
+                    <i class='bx bx-log-out icon'></i>
+                    <span class="text nav-text">logout</span>
+                </a>
+            </li>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

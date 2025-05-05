@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="clr.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>Laboratory Results</title>
+    <script>
+        window.onload = function () {
+            let username = localStorage.getItem("nurseName");
+    
+            if (username) {
+                document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                    el.textContent = username;
+                });
+            }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-box input");
+            const patientCards = document.querySelectorAll(".container-grid1 a");
+    
+            patientCards.forEach(card => {
+                card.setAttribute("data-original-html", card.innerHTML);
+            });
+    
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase().trim();
+    
+                patientCards.forEach(card => {
+                    
+                    card.innerHTML = card.getAttribute("data-original-html");
+    
+                    const nameEl = card.querySelector(".name");
+                    const numEl = card.querySelector(".patient-number");
+    
+                    const nameText = nameEl.textContent.toLowerCase();
+                    const numText = numEl.textContent.toLowerCase();
+    
+                    const matches = nameText.includes(searchText) || numText.includes(searchText);
+    
+                    if (searchText === "") {
+                        card.style.display = "";
+                        return;
+                    }
+    
+                    if (matches) {
+                        card.style.display = "";
+    
+                        const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+    
+                        highlightText(nameEl, regex);
+                        highlightText(numEl, regex);
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+    
+            function highlightText(element, regex) {
+                element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+            }
+        });
+
+                // new upd: upload handling
+
+                document.addEventListener("DOMContentLoaded", function() {
+    const fileUploads = document.querySelectorAll('.file-upload');
+    
+    fileUploads.forEach(upload => {
+        upload.addEventListener('change', function(e) {
+            const fileId = this.getAttribute('data-file-id');
+            const fileName = this.files[0]?.name;
+            
+            if (fileName) {
+                // Update the filename display
+                const filenameDisplay = document.getElementById(`filename-${fileId}`);
+                if (filenameDisplay) {
+                    filenameDisplay.textContent = fileName;
+                }
+                
+                // In a real implementation, you would upload the file to a server here
+                alert(`File "${fileName}" uploaded successfully. In a production environment, this would replace the current PDF.`);
+            }
+        });
+    });
+
+    // Show/hide upload form
+    const uploadButtons = document.querySelectorAll('.upload-btn');
+    uploadButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const fileId = this.getAttribute('data-file-id');
+            const uploadForm = document.getElementById(`upload-form-${fileId}`);
+            
+            if (uploadForm.style.display === 'none' || uploadForm.style.display === '') {
+                uploadForm.style.display = 'block';
+            } else {
+                uploadForm.style.display = 'none';
+            }
+        });
+    });
+});
+
+// new upd: file up
+
+document.addEventListener("DOMContentLoaded", function() {
+    
+    const uploadButtons = document.querySelectorAll('.upload-btn');
+    
+    
+    uploadButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const fileId = this.getAttribute('data-file-id');
+            const popup = document.getElementById(`upload-popup-${fileId}`);
+            popup.style.display = 'block';
+        });
+    });
+    
+    
+    const closeButtons = document.querySelectorAll('.close-popup');
+
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const popup = this.closest('.upload-popup');
+            popup.style.display = 'none';
+        });
+    });
+    
+    
+    window.addEventListener('click', function(event) {
+        const popups = document.querySelectorAll('.upload-popup');
+        popups.forEach(popup => {
+            if (event.target == popup) {
+                popup.style.display = 'none';
+            }
+        });
+    });
+    
+    
+    const fileInputs = document.querySelectorAll('.real-file-input');
+    
+    fileInputs.forEach(input => {
+        input.addEventListener('change', function(e) {
+            const fileId = this.getAttribute('data-file-id');
+            const fileName = this.files[0]?.name || "No file chosen";
+            const fileStatus = document.getElementById(`file-status-${fileId}`);
+            const pdfLink = document.getElementById(`pdf-link-${fileId}`);
+            const uploadProgress = document.getElementById(`upload-progress-${fileId}`);
+            const progressBar = document.getElementById(`progress-bar-${fileId}`);
+            const uploadSuccess = document.getElementById(`upload-success-${fileId}`);
+            
+            
+            fileStatus.textContent = fileName;
+            
+            if (this.files[0]) {
+                
+                uploadProgress.style.display = 'block';
+                uploadSuccess.style.display = 'none';
+                
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        const fileUrl = window.URL.createObjectURL(this.files[0]);
+                           
+                        if (pdfLink) {
+                            pdfLink.href = fileUrl;
+                        }
+                         
+                        setTimeout(() => {
+                            uploadProgress.style.display = 'none';
+                            uploadSuccess.style.display = 'block';
+                            
+                            
+                            setTimeout(() => {
+                                const popup = document.getElementById(`upload-popup-${fileId}`);
+                                popup.style.display = 'none';
+                            }, 1500);
+                        }, 300);
+                    }
+                }, 100);
+            }
+        });
+    });
+});
+    </script>
+</head>
+<body>
+    <div class="section-title">
+        <div class="back-btn">
+            <a href="cio.html">
+                <img src="las.png" alt="las">
+            </a>
+        </div>
+        <h2 style="font-size: 30px;">LABORATORY RESULTS</h2>
+        <div class="forward-btn">
+            <a href="ccdss.html">
+                <img src="ras.png" alt="ras">
+            </a>
+        </div>
+
+    </div>
+    <nav class = "sidebar close">
+        <header>
+            <a href="home.html" style="text-decoration:none">
+                <div class="image-text">
+                    <span class="image">
+                        <img src="logo.png" alt="logo">
+                    </span>
+    
+                    <div class="text header-text">
+                        <span class="title">Sterra Medical Center</span>
+                        <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                    </div>
+                </div>
+            </a>
+
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                        <i class='bx bx-search icon'></i>
+                        <input type="Search" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="db.html">
+                            <i class='bx bxs-dashboard icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <div class="dd">
+                        <li class="nav-link">
+                            <a href="">
+                                <i class='bx bx-folder-open icon'></i>
+                                <span class="text nav-text">Charts</span>
+                            </a>
+                            <div class="dd-content">
+                                <a href="c.html">Patient List</a>
+                                <a href="ap.html">Add a patient</a>
+                            </div>
+                        </li>
+                    </div>
+                    <li class="nav-link">
+                        <a href="am.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="f.html">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Finances</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="login.html">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="searchable-content">
+        <div class="lab-container">
+            <div class="hospital-info">
+                <div class="hospital-left">
+                    <div class="hospital-name">STERRA MEDICAL CENTER</div>
+                    <div class="hospital-location">Manila, Philippines</div>
+                </div>
+                <div class="lab-title-header">
+                    <img src="ehrlogo.png" alt="ehrlogo">
+                </div>
+            </div>
+            
+            <table class="lab-results-table">
+                <thead>
+                    <tr>
+                        <th>Lab No.</th>
+                        <th>Order Date</th>
+                        <th>Patient ID</th>
+                        <th>Patient Name</th>
+                        <th>Account</th>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th>Type</th>
+                        <th>Download</th>
+                        <th>Upload</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2490040446</td>
+                        <td>APR-09-2025</td>
+                        <td>0010409202</td>
+                        <td>MAGSAYSAY, THEODORE P.</td>
+                        <td>FAR EASTERN UNIVERSITY (FEU)</td>
+                        <td>M</td>
+                        <td>25</td>
+                        <td>LAB</td>
+                        <td>
+                            <div class="file-upload-container">
+                                <a href="LAB-1.pdf" class="pdf-link" id="pdf-link-lab2" target="_blank" rel="noopener noreferrer" download>
+                                    <img src="pdf.png" alt="PDF" class="pdf-icon">
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="file-upload-container">
+                                <button class="upload-btn" data-file-id="lab2">Upload</button>
+                                
+                                <div class="upload-popup" id="upload-popup-lab2">
+                                    <div class="popup-content">
+                                        <span class="close-popup">&times;</span>
+                                        <h3>Upload Lab Result file</h3>
+                                        <div class="custom-file-input">
+                                            <input type="file" class="real-file-input" data-file-id="lab2" accept=".pdf">
+                                            <label class="file-input-label">Upload</label>
+                                            <span class="file-status" id="file-status-lab2">No file chosen</span>
+                                        </div>
+                                        <div class="upload-progress" id="upload-progress-lab2">
+                                            <div class="progress-bar" id="progress-bar-lab2"></div>
+                                        </div>
+                                        <div class="upload-success" id="upload-success-lab2" style="display: none;">File uploaded successfully!</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2490040446</td>
+                        <td>APR-09-2025</td>
+                        <td>0010409202</td>
+                        <td>MAGSAYSAY, THEODORE P.</td>
+                        <td>FAR EASTERN UNIVERSITY (FEU)</td>
+                        <td>M</td>
+                        <td>25</td>
+                        <td>ECG/EKG</td>
+                        <td>
+                            <div class="file-upload-container">
+                                <a href="LAB-2.pdf" class="pdf-link" id="pdf-link-lab3" target="_blank" rel="noopener noreferrer" download>
+                                    <img src="pdf.png" alt="PDF" class="pdf-icon">
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="file-upload-container">
+                                <button class="upload-btn" data-file-id="lab3">Upload</button>
+                                
+                                <div class="upload-popup" id="upload-popup-lab3">
+                                    <div class="popup-content">
+                                        <span class="close-popup">&times;</span>
+                                        <h3>Upload Lab Result file</h3>
+                                        <div class="custom-file-input">
+                                            <input type="file" class="real-file-input" data-file-id="lab3" accept=".pdf">
+                                            <label class="file-input-label">Upload</label>
+                                            <span class="file-status" id="file-status-lab3">No file chosen</span>
+                                        </div>
+                                        <div class="upload-progress" id="upload-progress-lab3">
+                                            <div class="progress-bar" id="progress-bar-lab3"></div>
+                                        </div>
+                                        <div class="upload-success" id="upload-success-lab3" style="display: none;">File uploaded successfully!</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

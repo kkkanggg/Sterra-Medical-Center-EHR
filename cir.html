@@ -1,0 +1,512 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="db.css">
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+  <title>Immunization Record</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    * {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --body-color: #E4E9f7;
+      --sidebar-color: #FFF;
+      --primary-color: #695CFE;
+      --primary-color-light: #F6F5FF;
+      --toggle-color: #DDD;
+      --text-color: #707070;
+      --base-color: #205781;
+      --dash-color: #f7f6f2;
+
+      --tran-02: all 0.2s ease;
+      --tran-03: all 0.3s ease;
+      --tran-04: all 0.4s ease;
+      --tran-05: all 0.5s ease;
+    }
+
+    body {
+    display: flex;
+    height: 100vh;
+    background: var(--base-color);
+    overflow-x: hidden;
+        }
+
+    .section-title{
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    align-items: center;
+    margin-right: 10px;
+    gap: 10px;
+    left: 305px;
+    top: 15px;
+    color: var(--dash-color);
+    z-index: 99;
+}
+
+.back-btn img{
+    width: 20px;
+}
+
+.forward-btn img{
+    width: 20px;
+}
+
+.patient-name{
+    font-size: 25px;
+    margin-left: 798px;
+    color: var(--dash-color);
+    opacity: 0.5;
+}
+
+    .dashboard {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      padding: 20px;
+      margin-left: 300px;
+      margin-top: 70px;
+      width: calc(100% - 300px);
+      height: calc(100vh - 70px);
+      box-sizing: border-box;
+      background: var(--dash-color);
+      border-radius: 20px;
+      z-index: 1;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    h1 {
+      font-weight: 900;
+      font-size: 24px;
+      color: #0f172a;
+      margin-bottom: 8px;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .status-box {
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 24px;
+      color: #1e40af;
+      font-weight: 600;
+      font-size: 14px;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .status-label {
+      font-weight: 700;
+      color: #1e40af;
+      margin-right: 12px;
+      white-space: nowrap;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      color: #000;
+    }
+
+    .status-circle {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid;
+    }
+
+    .red {
+      background-color: #dc2626;
+      border-color: #b91c1c;
+    }
+
+    .yellow {
+      background-color: #facc15;
+      border-color: #ca8a04;
+    }
+
+    .green {
+      background-color: #16a34a;
+      border-color: #15803d;
+    }
+
+    /* Increased width for the table specifically */
+    table.immunization-table {
+      border-collapse: collapse;
+      border-radius: 6px;
+      overflow: hidden;
+      table-layout: fixed;
+      background-color: #9dd1df;
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 14px;
+      text-align: center;
+      width: 100%;
+      max-width: none;
+      flex-shrink: 0;
+    }
+
+    thead tr {
+      background-color: #9dd1df;
+      font-weight: 700;
+      font-size: 14px;
+      color: #0f172a;
+    }
+
+    thead th {
+      border: 1px solid #7bc1cc;
+      padding: 10px 6px;
+      word-break: break-word;
+      line-height: 1.2;
+    }
+
+    tbody tr {
+      background-color: #a9d7e2;
+      font-weight: 400;
+      font-size: 14px;
+      color: #0f172a;
+    }
+
+    tbody tr td {
+      border: 1px solid #7bc1cc;
+      padding: 10px 6px;
+      word-break: break-word;
+      text-align: center;
+      position: relative;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #9dd1df;
+    }
+
+    .provider-cell {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.1;
+      white-space: nowrap;
+      position: relative;
+      padding-top: 40px; /* space for signature overlay */
+    }
+
+    .signature-img {
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 80px;
+      height: auto;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .next-due {
+      font-weight: 700;
+    }
+
+    .green-text {
+      color: #15803d;
+    }
+
+    .red-text {
+      color: #b91c1c;
+    }
+
+    .yellow-text {
+      color: #d97706;
+    }
+
+    /* Center Hepatitis B #1 cell */
+    .hepatitis-cell {
+      text-align: center !important;
+      padding-left: 0 !important;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 8px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+      .status-box {
+        font-size: 12px;
+        gap: 12px;
+      }
+      .status-circle {
+        width: 12px;
+        height: 12px;
+      }
+      table.immunization-table {
+        font-size: 12px;
+        min-width: 700px;
+      }
+      thead th, tbody td {
+        padding: 6px 4px;
+      }
+      .provider-cell {
+        font-size: 12px;
+        white-space: normal;
+        padding-top: 36px;
+      }
+      .signature-img {
+        max-width: 60px;
+        top: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="section-title">
+    <div class="back-btn">
+        <a href="cvsm.html">
+            <img src="las.png" alt="las">
+        </a>
+    </div>
+    <h2 style="font-size: 30px;">IMMUNIZATION RECORD</h2>
+    <div class="forward-btn">
+        <a href="cir2.html">
+            <img src="ras.png" alt="ras">
+        </a>
+    </div>
+    <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+</div>
+  <div class="dashboard" role="main" aria-label="Immunization Record">
+    <section class="status-box" aria-label="Status legend">
+      <span class="status-label">STATUS</span>
+      <span class="status-item"><span class="status-circle red" aria-hidden="true"></span><em>Overdue</em></span>
+      <span class="status-item"><span class="status-circle yellow" aria-hidden="true"></span><em>Due Soon</em></span>
+      <span class="status-item"><span class="status-circle green" aria-hidden="true"></span><em>Up to Date</em></span>
+    </section>
+    <div style="overflow-x:auto; width: 100%;">
+      <table role="table" aria-describedby="immunization-description" class="immunization-table">
+        <thead>
+          <tr>
+            <th scope="col">IMMUNIZATION</th>
+            <th scope="col">DATE<br>ADMINISTERED</th>
+            <th scope="col">DOSE</th>
+            <th scope="col">LOT NUMBER</th>
+            <th scope="col">PROVIDER</th>
+            <th scope="col">NEXT DUE<br>DATE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BCG</td>
+            <td>09/26/2000</td>
+            <td>0.05 mL ID</td>
+            <td>BCG2000X</td>
+            <td class="provider-cell" aria-label="Provider Dr. Dela Cruz, DOH">
+              <img src="signature.png" alt="Signature of Dr. Dela Cruz" class="signature-img" />
+              Dr. Dela Cruz, DOH
+            </td>
+            <td class="next-due green-text">COMPLETE</td>
+          </tr>
+          <tr>
+            <td class="hepatitis-cell">Hepatitis B #1</td>
+            <td>09/26/2000</td>
+            <td>0.5 mL IM</td>
+            <td>HBV100A</td>
+            <td class="provider-cell" aria-label="Provider Dr. Dela Cruz, DOH">
+              <img src="signature.png" alt="Signature of Dr. Dela Cruz" class="signature-img" />
+              Dr. Dela Cruz, DOH
+            </td>
+            <td class="next-due red-text">10/15/2000</td>
+          </tr>
+          <tr>
+            <td>MMR</td>
+            <td>05/20/2001</td>
+            <td>0.5 mL SC</td>
+            <td>MMR788K</td>
+            <td class="provider-cell" aria-label="Provider Dr. Dela Cruz, DOH">
+              <img src="signature.png" alt="Signature of Dr. Dela Cruz" class="signature-img" />
+              Dr. Dela Cruz, DOH
+            </td>
+            <td class="next-due green-text">COMPLETE</td>
+          </tr>
+          <tr>
+            <td>Varicella</td>
+            <td>06/10/2002</td>
+            <td>0.5 mL SC</td>
+            <td>VAR567D</td>
+            <td class="provider-cell" aria-label="Provider Dr. Dela Cruz, DOH">
+              <img src="signature.png" alt="Signature of Dr. Dela Cruz" class="signature-img" />
+              Dr. Dela Cruz, DOH
+            </td>
+            <td class="next-due green-text">COMPLETE</td>
+          </tr>
+          <tr>
+            <td>Flu</td>
+            <td>06/15/2019</td>
+            <td>0.5 mL IM</td>
+            <td>FLU987DHI</td>
+            <td class="provider-cell" aria-label="Provider Dr. Dela Cruz, DOH">
+              <img src="signature.png" alt="Signature of Dr. Dela Cruz" class="signature-img" />
+              Dr. Dela Cruz, DOH
+            </td>
+            <td class="next-due yellow-text">10/01/2025</td>
+          </tr>
+          <tr>
+            <td>Covid-19</td>
+            <td>06/15/2019</td>
+            <td>0.5 mL IM</td>
+            <td>CVX21B</td>
+            <td class="provider-cell" aria-label="Provider Dr. Dela Cruz, DOH">
+              <img src="signature.png" alt="Signature of Dr. Dela Cruz" class="signature-img" />
+              Dr. Dela Cruz, DOH
+            </td>
+            <td class="next-due red-text">07/15/2020</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    window.onload = function () {
+        let username = localStorage.getItem("nurseName");
+
+        if (username) {
+            document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                el.textContent = username;
+            });
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector(".search-box input");
+        const patientCards = document.querySelectorAll(".container-grid1 a");
+
+        // Store original HTML for each card for accurate highlighting
+        patientCards.forEach(card => {
+            card.setAttribute("data-original-html", card.innerHTML);
+        });
+
+        searchInput.addEventListener("input", function () {
+            const searchText = searchInput.value.toLowerCase().trim();
+
+            patientCards.forEach(card => {
+                // Reset to original content first
+                card.innerHTML = card.getAttribute("data-original-html");
+
+                const nameEl = card.querySelector(".name");
+                const numEl = card.querySelector(".patient-number");
+
+                const nameText = nameEl.textContent.toLowerCase();
+                const numText = numEl.textContent.toLowerCase();
+
+                const matches = nameText.includes(searchText) || numText.includes(searchText);
+
+                if (searchText === "") {
+                    card.style.display = "";
+                    return;
+                }
+
+                if (matches) {
+                    card.style.display = "";
+
+                    const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+
+                    highlightText(nameEl, regex);
+                    highlightText(numEl, regex);
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+        function highlightText(element, regex) {
+            element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+        }
+    });
+</script>
+</head>
+<body>
+
+<nav class = "sidebar close">
+    <header>
+        <a href="home.html" style="text-decoration:none">
+            <div class="image-text">
+                <span class="image">
+                    <img src="logo.png" alt="logo">
+                </span>
+
+                <div class="text header-text">
+                    <span class="title">Sterra Medical Center</span>
+                    <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                </div>
+            </div>
+        </a>
+
+    </header>
+    <div class="menu-bar">
+        <div class="menu">
+            <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="Search" placeholder="Search...">
+            </li>
+            <ul class="menu-links">
+                <li class="nav-link">
+                    <a href="db.html">
+                        <i class='bx bxs-dashboard icon'></i>
+                        <span class="text nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <div class="dd">
+                    <li class="nav-link">
+                        <a href="">
+                            <i class='bx bx-folder-open icon'></i>
+                            <span class="text nav-text">Charts</span>
+                        </a>
+                        <div class="dd-content">
+                            <a href="c.html">Patient List</a>
+                            <a href="ap.html">Add a patient</a>
+                        </div>
+                    </li>
+                </div>
+                <li class="nav-link">
+                    <a href="am.html">
+                        <i class='bx bx-calendar icon'></i>
+                        <span class="text nav-text">Appointment</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="f.html">
+                        <i class='bx bx-receipt icon'></i>
+                        <span class="text nav-text">Finances</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bottom-content">
+            <li class="">
+                <a href="login.html">
+                    <i class='bx bx-log-out icon'></i>
+                    <span class="text nav-text">logout</span>
+                </a>
+            </li>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

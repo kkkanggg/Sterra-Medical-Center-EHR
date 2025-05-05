@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equi="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="f.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>Finances</title>
+    <script>
+        window.onload = function () {
+            let username = localStorage.getItem("nurseName");
+    
+            if (username) {
+                document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                    el.textContent = username;
+                });
+            }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-box input");
+            const patientCards = document.querySelectorAll("#searchable-content .data-one");
+    
+            // Save original HTML for each card
+            patientCards.forEach(card => {
+                card.setAttribute("data-original-html", card.innerHTML);
+            });
+    
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase().trim();
+    
+                patientCards.forEach(card => {
+                    // Reset to original HTML first
+                    card.innerHTML = card.getAttribute("data-original-html");
+    
+                    const nameEl = card.querySelector(".name");
+                    const numEl = card.querySelector(".patient-number");
+    
+                    const nameText = nameEl?.textContent.toLowerCase() || "";
+                    const numText = numEl?.textContent.toLowerCase() || "";
+    
+                    const matches = nameText.includes(searchText) || numText.includes(searchText);
+    
+                    if (searchText === "") {
+                        card.style.display = "";
+                        return;
+                    }
+    
+                    if (matches) {
+                        card.style.display = "";
+    
+                        const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+    
+                        highlightText(nameEl, regex);
+                        highlightText(numEl, regex);
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+    
+            function highlightText(element, regex) {
+                if (!element) return;
+                element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="section-title">
+        <h1 class="ch">BILLINGS AND FINANCES</h1>
+    </div>
+    <nav class = "sidebar close">
+        <header>
+            <a href="home.html" style="text-decoration:none">
+                <div class="image-text">
+                    <span class="image">
+                        <img src="logo.png" alt="logo">
+                    </span>
+                    <div class="text header-text">
+                        <span class="title">Sterra Medical Center</span>
+                        <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                    </div>
+                </div>
+            </a>
+
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                        <i class='bx bx-search icon'></i>
+                        <input type="Search" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="db.html">
+                            <i class='bx bxs-dashboard icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <div class="dd">
+                        <li class="nav-link">
+                            <a href="">
+                                <i class='bx bx-folder-open icon'></i>
+                                <span class="text nav-text">Charts</span>
+                            </a>
+                            <div class="dd-content">
+                                <a href="c.html">Patient List</a>
+                                <a href="ap.html">Add a patient</a>
+                            </div>
+                        </li>
+                    </div>
+                    <li class="nav-link">
+                        <a href="am.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="f.html">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Finances</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="login.html">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="searchable-content">
+        <a href="fp1.html">
+            <div class="data-one">
+                <div class="image-icon">
+                    <span class="image1">
+                        <img src="p1.png" alt="p1">
+                    </span>
+                    
+                    <div class="data1">
+                        <span class="name">00104092025</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+            <div class="data-one">
+                <div class="image-icon">
+                    <span class="image1">
+                        <img src="p2.png" alt="p1">
+                    </span>
+                    
+                    <div class="data1">
+                        <span class="name">00204092025</span>
+                    </div>
+                </div>
+          </div>
+
+          <div class="data-one">
+            <div class="image-icon">
+                <span class="image1">
+                    <img src="p3.png" alt="p3">
+                </span>
+                
+                <div class="data1">
+                    <span class="name">00304092025</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

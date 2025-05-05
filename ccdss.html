@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="ccdss.css">
+    <link rel="stylesheet" href="sb.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>CDSS</title>
+    <script>
+        window.onload = function () {
+            let username = localStorage.getItem("nurseName");
+    
+            if (username) {
+                document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                    el.textContent = username;
+                });
+            }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-box input");
+            const patientCards = document.querySelectorAll(".container-grid1 a");
+    
+            // Store original HTML for each card for accurate highlighting
+            patientCards.forEach(card => {
+                card.setAttribute("data-original-html", card.innerHTML);
+            });
+    
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase().trim();
+    
+                patientCards.forEach(card => {
+                    // Reset to original content first
+                    card.innerHTML = card.getAttribute("data-original-html");
+    
+                    const nameEl = card.querySelector(".name");
+                    const numEl = card.querySelector(".patient-number");
+    
+                    const nameText = nameEl.textContent.toLowerCase();
+                    const numText = numEl.textContent.toLowerCase();
+    
+                    const matches = nameText.includes(searchText) || numText.includes(searchText);
+    
+                    if (searchText === "") {
+                        card.style.display = "";
+                        return;
+                    }
+    
+                    if (matches) {
+                        card.style.display = "";
+    
+                        const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+    
+                        highlightText(nameEl, regex);
+                        highlightText(numEl, regex);
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+    
+            function highlightText(element, regex) {
+                element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+            }
+        });
+
+        // this part functions for the flowchart
+        document.addEventListener('DOMContentLoaded', function() {
+        const decisionTree = {
+    "Is the patient's BP ≥ 140/90 mmHg?": {
+        warning: null,
+        yes: {
+            next: "Does the patient have atrial fibrillation?",
+            action: null
+        },
+        no: {
+            next: null,
+            action: "Continue monitoring BP regularly."
+        }
+    },
+    "Does the patient have atrial fibrillation?": {
+        warning: "Caution: Consider the need for rate control (e.g., metoprolol)",
+        yes: {
+            next: "Is the albumin-to-creatinine ratio (ACR) elevated (>3 mg/mmol)?",
+            action: "Caution: Consider the need for rate control (e.g., metoprolol)"
+        },
+        no: {
+            next: null,
+            action: "Initiate standard antihypertensive therapy (e.g., lisinopril, amlodipine)"
+        }
+    },
+    "Is the albumin-to-creatinine ratio (ACR) elevated (>3 mg/mmol)?": {
+        warning: null,
+        yes: {
+            next: "Are the patient's cholesterol levels elevated?",
+            action: null
+        },
+        no: {
+            next: null,
+            action: "Continue with current therapy and lifestyle recommendations."
+        }
+    },
+    "Are the patient's cholesterol levels elevated?": {
+        warning: "Caution: Adjust medications to include renal protection(e.g., Lisinopril)",
+        yes: {
+            next: "Is the patient currently on an anticoagulant (e.g., apixaban)?",
+            action: "Continue atorvastatin and monitor lipid levels after 6 weeks"
+        },
+        no: {
+            next: null,
+            action: "Continue with current therapy and lifestyle recommendations."
+        }
+    },
+    "Is the patient currently on an anticoagulant (e.g., apixaban)?": {
+        warning: null,
+        yes: {
+            next: "Is the ECG showing irregular rhythm consistent with atrial fibrillation?",
+            action: "Warning: Monitor for bleeding risks and ensure patient compliance."
+        },
+        no: {
+            next: null,
+            action: "Caution: Consider initiating anticoagulation therapy. Refer to cardiology."
+        }
+    },
+    "Is the ECG showing irregular rhythm consistent with atrial fibrillation?": {
+        yes: {
+            next: "Has the patient been counseled on lifestyle modifications?",
+            action: null
+        },
+        no: {
+            next: null,
+            action: "Reassess ECG periodically. Continue monitoring for new or worsening symptoms. Continue ECG monitoring if symptomatic and refer to cardiology"
+        }
+    },
+    "Has the patient been counseled on lifestyle modifications?": {
+        warning: "Warning: Reinforce adherence to diet, exercise, and weight management",
+        yes: {
+            next: "Is the patient's BP ≥ 180/120 mmHg, or is there acute hypertensive emergency?",
+            action: "Warning: Reinforce adherence to diet, exercise, and weight management"
+        },
+        no: {
+            next: null,
+            action: "Provide education on: 1. Low-sodium and heart-healthy diet 2. Exercise (30 minutes of moderate-intensity exercise 5 days per week) 3. Smoking cessation counseling"
+        }
+    },
+    "Is the patient's BP ≥ 180/120 mmHg, or is there acute hypertensive emergency?": {
+        warning: null,
+        yes: {
+            next: null,
+            action: "Warning: Immediate action required. Administer labetalol (20 mg IV) for acute BP control. Monitor BP every 5 minutes and place on cardiac monitor."
+        },
+        no: {
+            next: "Proceed with ongoing management and followup as needed.",
+            action: "Continue with outpatient management."
+        }
+    },
+    "Proceed with ongoing management and followup as needed.": {
+        warning: "Warning: Immediate action required. Administer labetalol (20 mg IV) for acute BP control. Monitor BP every 5 minutes and place on cardiac monitor.",
+        yes: {
+            next: null,
+            action: "Warning: Immediate action required. Administer labetalol (20 mg IV) for acute BP control. Monitor BP every 5 minutes and place on cardiac monitor."
+        },
+        no: {
+            next: null,
+            action: "End"
+        }
+    }
+    // "Warning: Ensure regular BP checks, monitor renal function, continue ECG monitoring for atrial fibrillation, and maintain lifestyle modifications."
+};
+
+        // DOM elements
+        const questionContainer = document.getElementById('question-container');
+        const currentQuestion = document.getElementById('current-question');
+        const warningContainer = document.getElementById('warning-container');
+        const warningText = document.getElementById('warning-text');
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const actionContainer = document.getElementById('action-container');
+        const actionText = document.getElementById('action-text');
+        const nextBtn = document.getElementById('next-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const decisionHistory = document.getElementById('decision-history');
+
+        // State variables
+        let activeQuestion = "Is the patient's BP ≥ 140/90 mmHg?";
+        let nextActiveQuestion = null;
+        const history = [];
+        let endOfPath = false;
+
+        // Initialize with first question
+        displayCurrentQuestion();
+
+        // Set up event listeners
+        yesBtn.addEventListener('click', () => handleResponse('yes'));
+        noBtn.addEventListener('click', () => handleResponse('no'));
+        nextBtn.addEventListener('click', showNextQuestion);
+        resetBtn.addEventListener('click', resetFlow);
+
+        function displayCurrentQuestion() {
+            // Set the question text
+            currentQuestion.textContent = activeQuestion;
+            
+            // Check if there's a warning for this question
+            const warning = decisionTree[activeQuestion].warning;
+            if (warning) {
+                warningText.textContent = warning;
+                warningContainer.classList.remove('hidden');
+                
+                // Style based on warning type
+                if (warning.includes("Warning:")) {
+                    warningContainer.style.backgroundColor = "#f2dede";
+                    warningContainer.style.borderLeftColor = "#d9534f";
+                    warningText.style.color = "#a94442";
+                } else if (warning.includes("Caution:")) {
+                    warningContainer.style.backgroundColor = "#fcf8e3";
+                    warningContainer.style.borderLeftColor = "#f0ad4e";
+                    warningText.style.color = "#8a6d3b";
+                }
+            } else {
+                warningContainer.classList.add('hidden');
+            }
+        }
+
+        function handleResponse(response) {
+    // Get current decision node
+    const decisionNode = decisionTree[activeQuestion];
+    const result = decisionNode[response];
+    
+    // Add to history with warning if present
+    const historyItem = document.createElement('li');
+    let historyText = `Q: ${activeQuestion} - A: ${response}`;
+    
+    // Add warning badge if applicable
+    if (decisionNode.warning) {
+        const badgeType = decisionNode.warning.includes("Warning:") ? "warning-badge" : "caution-badge";
+        const badgeText = decisionNode.warning.includes("Warning:") ? "WARNING" : "CAUTION";
+        
+        // Create the span for the badge with tooltip data
+        historyText = `<span class="${badgeType}" data-tooltip="${decisionNode.warning}">${badgeText}</span> ${historyText}`;
+    }
+    
+    historyItem.innerHTML = historyText;
+    decisionHistory.prepend(historyItem);
+    history.push({ 
+        question: activeQuestion, 
+        answer: response,
+        warning: decisionNode.warning 
+    });
+
+    // Hide question container
+    questionContainer.classList.add('hidden');
+    actionContainer.classList.remove('hidden');
+
+    // Check if we have action text to display
+    if (result.action) {
+        actionText.textContent = result.action;
+        
+        // Style based on action type
+        if (result.action.includes("Warning:")) {
+            actionText.className = 'warning';
+        } else if (result.action.includes("Caution:")) {
+            actionText.className = 'caution';
+        } else {
+            actionText.className = 'normal';
+        }
+    } else {
+        actionText.textContent = "Proceeding to next assessment...";
+        actionText.className = 'normal';
+    }
+
+    // Set up next question if available
+    if (result.next) {
+        nextActiveQuestion = result.next;
+        nextBtn.classList.remove('hidden');
+        resetBtn.classList.add('hidden');
+        endOfPath = false;
+    } else {
+        // End of path
+        if (result.action && (
+            result.action.includes("Continue monitoring BP regularly") ||
+            result.action.includes("Initiate standard antihypertensive therapy") ||
+            result.action.includes("Continue with current therapy") ||
+            result.action.includes("Provide education on") ||
+            result.action.includes("Reassess ECG periodically") ||
+            result.action.includes("Continue with outpatient management") ||
+            result.action.includes("Warning: Immediate action required") ||
+            result.action.includes("Warning: Ensure regular BP checks")
+        )) {
+            endOfPath = true;
+            const completionMsg = document.createElement('li');
+            completionMsg.textContent = "Clinical pathway completed.";
+            completionMsg.style.fontWeight = "bold";
+            completionMsg.style.color = "green";
+            decisionHistory.prepend(completionMsg);
+        }
+        
+        nextActiveQuestion = null;
+        nextBtn.classList.add('hidden');
+        resetBtn.classList.remove('hidden');
+    }
+}
+
+        function showNextQuestion() {
+            if (nextActiveQuestion) {
+                activeQuestion = nextActiveQuestion;
+                displayCurrentQuestion();
+                questionContainer.classList.remove('hidden');
+                actionContainer.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+            }
+        }
+
+        function resetFlow() {
+            // Reset to initial question
+            activeQuestion = "Is the patient's BP ≥ 140/90 mmHg?";
+            displayCurrentQuestion();
+            questionContainer.classList.remove('hidden');
+            actionContainer.classList.add('hidden');
+            resetBtn.classList.add('hidden');
+            endOfPath = false;
+            
+            // Add reset marker to history
+            const resetMarker = document.createElement('li');
+            resetMarker.textContent = "--- New Assessment Started ---";
+            resetMarker.style.textAlign = "center";
+            resetMarker.style.fontWeight = "bold";
+            resetMarker.style.padding = "15px 0";
+            decisionHistory.prepend(resetMarker);
+        }
+
+        // Initial setup - make sure everything is in correct starting state
+        resetBtn.classList.add('hidden');
+    });
+    </script>
+</head>
+<body>
+    <div class="section-title">
+        <div class="back-btn">
+            <a href="clr.html">
+                <img src="las.png" alt="las">
+            </a>
+        </div>
+        <h2 style="font-size: 30px;">CLINICAL DECISION SUPPORT SYSTEM</h2>
+        <div class="forward-btn">
+            <a href="ccp.html">
+                <img src="ras.png" alt="ras">
+            </a>
+        </div>
+        <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+    </div>
+    <nav class = "sidebar close">
+        <header>
+            <a href="home.html" style="text-decoration:none">
+                <div class="image-text">
+                    <span class="image">
+                        <img src="logo.png" alt="logo">
+                    </span>
+    
+                    <div class="text header-text">
+                        <span class="title">Sterra Medical Center</span>
+                        <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                    </div>
+                </div>
+            </a>
+
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                        <i class='bx bx-search icon'></i>
+                        <input type="Search" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="db.html">
+                            <i class='bx bxs-dashboard icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <div class="dd">
+                        <li class="nav-link">
+                            <a href="">
+                                <i class='bx bx-folder-open icon'></i>
+                                <span class="text nav-text">Charts</span>
+                            </a>
+                            <div class="dd-content">
+                                <a href="c.html">Patient List</a>
+                                <a href="ap.html">Add a patient</a>
+                            </div>
+                        </li>
+                    </div>
+                    <li class="nav-link">
+                        <a href="am.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="f.html">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Finances</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="login.html">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="searchable-content">
+          <div class="container-grid1">
+                <div class="data-one">
+                        <div class="data1">
+                            <span class="name">Nursing Diagnosis:</span>
+                                <select name="ND" id="ND">
+                                  <option value="NDC">Select</option>
+                                  <option value="NDC">Decreased Cardiac Output related to altered heart rate and rhythm secondary to arrhythmia, as evidenced by elevated blood pressure </option>
+                                  <option value="NDC">Risk for decreased cardiac tissue perfusion related to arrhythmia-induced reduced cardiac output </option>
+                                </select>
+                        </div>
+                </div>
+
+                <div class="data-two">
+                    <div id="flowchart-container">
+                        <div id="question-container">
+                            <p id="current-question">Is the patient's BP ≥ 140/90 mmHg?</p>
+                            <div id="warning-container" class="hidden">
+                                <p id="warning-text"></p>
+                            </div>
+                            <div class="button-container">
+                                <button id="yes-btn" class="response-btn">Yes</button>
+                                <button id="no-btn" class="response-btn">No</button>
+                            </div>
+                        </div>
+                        <div id="action-container" class="hidden">
+                            <p id="action-text"></p>
+                            <button id="next-btn" class="action-btn hidden">Next Question</button>
+                            <button id="reset-btn" class="action-btn hidden">Start Over</button>
+                        </div>
+                        <div id="history-container">
+                            <h3>Decision Path:</h3>
+                            <ul id="decision-history"></ul>
+                        </div>
+                    </div>
+                </div>
+      </div>
+    </div>
+
+</body>
+</html>

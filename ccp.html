@@ -1,0 +1,654 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="db.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>Care Plan</title>
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --body-color: #E4E9f7;
+            --sidebar-color: #FFF;
+            --primary-color: #695CFE;
+            --primary-color-light: #F6F5FF;
+            --toggle-color: #DDD;
+            --text-color: #707070;
+            --base-color: #205781;
+            --dash-color: #f7f6f2;
+
+            --tran-02: all 0.2s ease;
+            --tran-03: all 0.3s ease;
+            --tran-04: all 0.4s ease;
+            --tran-05: all 0.5s ease;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background: var(--base-color);
+            overflow-x: hidden;
+        }
+
+.section-title{
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    align-items: center;
+    margin-right: 10px;
+    gap: 10px;
+    left: 305px;
+    top: 15px;
+    color: var(--dash-color);
+    z-index: 99;
+}
+  
+.back-btn img{
+    width: 20px;
+    vertical-align: middle;
+}
+  
+.forward-btn img{
+    width: 20px;
+    vertical-align: middle;
+}
+  
+.patient-name{
+    font-size: 25px;
+    margin-left: 995px;
+    color: var(--dash-color);
+    opacity: 0.5;
+}
+
+        .dashboard{
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    margin-left: 300px;  /* Leaves space for sidebar */
+    margin-top: 70px;    /* Avoids overlapping the header */
+    width: calc(100% - 300px);
+    box-sizing: border-box;
+    background: var(--dash-color);
+    border-radius: 20px;
+    z-index: 1;
+    overflow-y: auto;
+ }
+
+        .container {
+            width: 100%;
+            padding: 5px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header-container {
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.25);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #1e40af;
+            font-size: 16px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .header input {
+            border: none;
+            background: none;
+            color: #1e40af;
+            font-size: 16px;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        .header button {
+            color: #1e40af;
+            font-size: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .content {
+            padding: 20px;
+            width: 100%;
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            flex: 1;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.25);
+        }
+
+        .content p {
+            margin: 2px 0;
+            line-height: 1.2;
+        }
+
+        .content .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .content .grid div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content .grid div p {
+            color: #4b5563;
+        }
+
+        .content .grid div p:first-child {
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .content .grid div p:first-child {
+            font-size: 20px;
+        }
+
+
+            .sections {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-top: 50px;
+    }
+    
+    .section {
+        flex: 1;
+        min-width: 300px;
+        max-height: 500px;
+        overflow-y: auto;
+    }
+        .section h2 {
+            color: #1e40af;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section h2 button {
+            color: #1e40af;
+            font-size: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .card {
+            background-color: #e0f2fe;
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 8px;
+        }
+
+        .card.yellow {
+            background-color: #fef3c7;
+        }
+
+        .card p {
+            margin: 2px 0;
+            line-height: 1.2;
+        }
+
+        .card p:first-child {
+            color: #1e40af;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card p:first-child button {
+            color: #1e40af;
+            font-size: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .card button {
+            background-color: #374151;
+            color: white;
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .card .timestamp {
+            color: #6b7280;
+            margin-top: 8px;
+        }
+
+        .card .description {
+            color: #374151;
+            margin-top: 8px;
+        }
+
+        .date-input, .text-input {
+            border: none;
+            background: none;
+            color: #4b5563;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+        }
+
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+    padding: 2px;
+}
+
+
+.db{
+    position: absolute;
+    left: 310px;
+    top: 15px;
+    color: var(--dash-color);
+    z-index: 99;
+}
+
+.dd{
+    position: relative;
+    z-index: 10000;
+}
+  
+.dd-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10000;
+}
+
+.dd-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+  
+.dd-content a:hover {
+    color: var(--dash-color);
+}
+  
+.dd:hover .dd-content {
+    display: block;
+    position: absolute;
+    left: 80%;
+    border-radius: 10px;
+}
+    </style>
+</head>
+<body>
+    <div class="section-title">
+        <div class="back-btn">
+            <a href="ccdss.html">
+                <img src="las.png" alt="las">
+            </a>
+        </div>
+        <h2 style="font-size: 30px;">CARE PLAN</h2>
+        <div class="forward-btn">
+            <a href="cdisP.html">
+                <img src="ras.png" alt="ras">
+            </a>
+        </div>
+        <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+    </div>
+    <div class="dashboard">
+        <div class="container">
+            <div class="header-container">
+                <div class="header">
+                    <h1>CARE PLAN TITLE:</h1>
+                    <input type="text" placeholder=" Management of Hypertension and Arrhythmias
+                    ">
+                    <button><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="content" style="width: 100%;">
+                <div class="grid">
+                    <div>
+                        <p>PATIENT NAME:</p>
+                        <p>Magsaysay, Theodore P.</p>
+                    </div>
+                    <div>
+                        <p>MEDICAL DIAGNOSIS:</p>
+                        <p>Hypertension, Hyperlipidemia, Atrial Fibrillation, Early Stage Hypertensive</p>
+                    </div>
+                    <div>
+                        <p>DATE:</p>
+                        <input type="text" class="date-input" id="datePicker" placeholder="mm, dd, yyy">
+                    </div>
+                    <div>
+                        <p>GOAL:</p>
+                        <p>To achieve blood pressure and heart rhythm control and reduce symptoms of dizziness and palpitations.</p>
+                    </div>
+                    <div>
+                        <p>PRIORITY:</p>
+                        <p>Primary</p>
+                    </div>
+                    <div>
+                        <p>AUTHOR:</p>
+                        <input type="text" class="text-input" placeholder="Name, RN">
+                    </div>
+                </div>
+            </div>
+            <div class="sections">
+                <div class="section">
+                    <h2>I. OUTCOMES <button><i class="fas fa-plus"></i></button></h2>
+                    <div class="card">
+                        <p>PATIENT WILL REPORT A DECREASE IN EPISODES OF DIZZINESS AND PALPITATIONS WITHIN 48–72 HOURS AFTER INITIATING PROPER MEDICATION ADHERENCE <button><i class="fas fa-expand-arrows-alt"></i></button></p>
+                        
+                    
+                        <p class="description">Patient reported that dizziness episodes lessened and palpitations became less frequent after consistent medication intake.</p>
+                        <p class="timestamp">Date and time:</p>
+                        <button>ADD EVALUATION</button>
+                      
+                    </div>
+                    <div class="card">
+                        <p>PATIENT WILL DEMONSTRATE UNDERSTANDING OF THE IMPORTANCE OF MEDICATION COMPLIANCE BY CORRECTLY DESCRIBING HIS ANTIHYPERTENSIVE REGIMEN BEFORE DISCHARGE <button><i class="fas fa-expand-arrows-alt"></i></button></p>
+                       
+                        <p class="description">Patient was able to verbalize the correct time and dosage for taking Amlodipine and other prescribed medications.</p>
+                        <p class="timestamp">Date and time:</p>
+                        <button>ADD EVALUATION</button>
+                    </div>
+                    <div class="card">
+                        <p>PATIENT WILL ACHIEVE A CONTROLLED BLOOD PRESSURE LEVEL (<140/90 mmHg) WITHIN 1–2 WEEKS WITH ADHERENCE TO LIFESTYLE CHANGES AND MEDICATIONS <button><i class="fas fa-expand-arrows-alt"></i></button></p>
+                       
+                        <p class="description">Patient's blood pressure reading during follow-up was 138/88 mmHg after implementing prescribed treatments.</p>
+                        <p class="timestamp">Date and time:</p>
+                        <button>ADD EVALUATION</button>
+                    </div>
+                    <div class="card">
+                        <p>PATIENT WILL VERBALIZE AT LEAST THREE DIETARY MODIFICATIONS NEEDED TO CONTROL HYPERTENSION AND HYPERLIPIDEMIA BEFORE DISCHARGE <button><i class="fas fa-expand-arrows-alt"></i></button></p>
+                       
+                        <p class="description">Patient listed avoiding fast food, reducing salt intake, and choosing fresh vegetables and lean meats during diet counseling.</p>
+                        <p class="timestamp">Date and time:</p>
+                        <button>ADD EVALUATION</button>
+                    </div>
+                    <div class="card">
+                        <p>PATIENT WILL ENGAGE IN AT LEAST 10–15 MINUTES OF LIGHT PHYSICAL ACTIVITY (E.G., WALKING) DAILY WITHIN 5 DAYS OF INITIATING THE HEALTH PLAN <button><i class="fas fa-expand-arrows-alt"></i></button></p>
+                      
+                        <p class="description">Patient reported walking for 15 minutes daily in the past 3 days and expressed willingness to increase gradually.</p>
+                        <p class="timestamp">Date and time:</p>
+                        <button>ADD EVALUATION</button>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2>II. INTERVENTIONS/ ACTIVITIES <button><i class="fas fa-plus"></i></button></h2>
+                    <div class="card yellow">
+                        <p>EDUCATE THE PATIENT ABOUT THE IMPORTANCE OF STRICT MEDICATION ADHERENCE TO CONTROL HYPERTENSION AND PREVENT ARRHYTHMIAS <button><i class="fas fa-expand-arrows-alt"></i></button></p>
+                       
+                        <p class="description">Patient verbalized understanding and set alarms on his phone to remind him to take his medications regularly.</p>
+                        <p class="timestamp">Date and time:</p>
+                        <button>ADD EVALUATION</button>
+                    </div>
+                    <div class="card yellow">
+                        <p>MONITOR AND RECORD BLOOD PRESSURE, HEART RATE, AND RHYTHM EVERY SHIFT; ADVISE THE PATIENT TO CONTINUE HOME MONITORING <button><i class="fas fa-expand-arrows-alt"></i></button></p>
+                       
+                        <p class="description">Patient recorded home BP readings twice a day and showed improved awareness of his vital signs.</p>
+                        <p class="timestamp">Date and time:</p>
+                        <button>ADD EVALUATION</button>
+                    </div>
+                    <div class="card yellow">
+                        <p>PROVIDE DIETARY COUNSELING FOCUSING ON REDUCING SODIUM INTAKE, MINIMIZING FAST FOOD, AND INCORPORATING HEART-HEALTHY FOODS <button><i class="fas fa-expand-arrows-alt"></i></button></p>
+                       
+                        <p class="description">Patient shared that he replaced his usual fast-food lunch with a prepared low-sodium meal twice during his hospital stay.</p>
+                        <p class="timestamp">Date and time:</p>
+                        <button>ADD EVALUATION</button>
+                    </div>
+                    <div class="card yellow">
+                        <p>ENCOURAGE SMOKING CESSATION BY OFFERING RESOURCES AND BRIEF COUNSELING, EXPLAINING ITS ROLE IN WORSENING HYPERTENSION AND CARDIAC RISK <button><i class="fas fa-expand-arrows-alt"></i></button></p>
+                        
+                        <p class="description">Patient expressed readiness to cut down cigarette consumption by half and consider nicotine replacement therapy.</p>
+                        <p class="timestamp">Date and time:</p>
+                        <button>ADD EVALUATION</button>
+                    </div>
+
+                    <div class="card yellow">
+                        <p>PROMOTE GRADUAL INCREASE IN PHYSICAL ACTIVITY TAILORED TO HIS CONDITION, SUCH AS STARTING WITH SHORT, SLOW-PACED WALKS <button><i class="fas fa-expand-arrows-alt"></i></button></p>
+                       
+                        <p class="description">Patient initiated 10-minute daily walks and reported feeling slightly less fatigued afterward.</p>
+                        <p class="timestamp">Date and time:</p>
+                        <button>ADD EVALUATION</button>
+                    </div>
+                </div>
+            </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("#datePicker", {
+            dateFormat: "m, d, Y"
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+    // Get all "ADD EVALUATION" buttons
+    const evaluationButtons = document.querySelectorAll(".card button");
+    
+    // Add click event listener to each button
+    evaluationButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            // Get the parent card
+            const card = this.closest(".card");
+            
+            // Get the timestamp and description elements
+            const timestamp = card.querySelector(".timestamp");
+            const description = card.querySelector(".description");
+            
+            // Create date input for timestamp
+            const dateInput = document.createElement("input");
+            dateInput.type = "text";
+            dateInput.className = "date-input evaluation-date";
+            dateInput.placeholder = "mm/dd/yyyy hh:mm";
+            
+            // Create textarea for description
+            const textArea = document.createElement("textarea");
+            textArea.className = "evaluation-input";
+            textArea.placeholder = "Enter your evaluation here...";
+            textArea.value = description.textContent;
+            textArea.style.width = "100%";
+            textArea.style.minHeight = "60px";
+            textArea.style.padding = "8px";
+            textArea.style.borderRadius = "4px";
+            textArea.style.border = "1px solid #ddd";
+            textArea.style.marginTop = "8px";
+            
+            // Create save button
+            const saveButton = document.createElement("button");
+            saveButton.textContent = "Save Evaluation";
+            saveButton.style.backgroundColor = "#205781";
+            saveButton.style.color = "white";
+            saveButton.style.padding = "6px 12px";
+            saveButton.style.border = "none";
+            saveButton.style.borderRadius = "4px";
+            saveButton.style.cursor = "pointer";
+            saveButton.style.marginTop = "8px";
+            
+            // Replace timestamp and description with inputs
+            timestamp.innerHTML = "Date and time: ";
+            timestamp.appendChild(dateInput);
+            
+            description.innerHTML = "";
+            description.appendChild(textArea);
+            description.appendChild(document.createElement("br"));
+            description.appendChild(saveButton);
+            
+            // Initialize flatpickr on the new date input
+            flatpickr(dateInput, {
+                enableTime: true,
+                dateFormat: "m/d/Y H:i",
+                defaultDate: new Date()
+            });
+            
+            // Change button text and disable it
+            this.textContent = "Editing...";
+            this.disabled = true;
+            
+            // Add event listener to save button
+            saveButton.addEventListener("click", function() {
+                const newDate = dateInput.value;
+                const newDescription = textArea.value;
+                
+                // Update the timestamp and description
+                timestamp.innerHTML = newDate;
+                description.innerHTML = newDescription;
+                
+                // Re-enable the evaluation button
+                button.textContent = "ADD EVALUATION";
+                button.disabled = false;
+            });
+        });
+    });
+});
+    </script>
+        <script>
+            window.onload = function() {
+                let username = localStorage.getItem("nurseName");
+        
+                if (username) {
+                    document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                        el.textContent = username;
+                    });
+                }
+            };
+    
+            // this section handles the search feature
+        document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector(".search-box input");
+        const contentContainer = document.getElementById("searchable-content");
+    
+        const originalHTML = contentContainer.innerHTML;
+    
+        searchInput.addEventListener("input", function () {
+            const searchText = searchInput.value.trim();
+    
+            contentContainer.innerHTML = originalHTML;
+    
+            if (searchText === "") return;
+    
+            const safeSearchText = searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const regex = new RegExp(`(${safeSearchText})`, "gi");
+    
+            highlightMatches(contentContainer, regex);
+        });
+    
+        function highlightMatches(element, regex) {
+            const nodes = Array.from(element.childNodes);
+    
+            nodes.forEach(node => {
+                if (node.nodeType === 3) {
+                    const replaced = node.nodeValue.replace(regex, '<span class="highlight">$1</span>');
+                    if (replaced !== node.nodeValue) {
+                        const wrapper = document.createElement("span");
+                        wrapper.innerHTML = replaced;
+                        node.replaceWith(wrapper);
+                    }
+                } else if (node.nodeType === 1) {
+                    highlightMatches(node, regex);
+                }
+            });
+        }
+    });
+        </script>
+    </head>
+    <body>
+        <nav class = "sidebar close">
+            <header>
+                <a href="home.html" style="text-decoration:none">
+                    <div class="image-text">
+                        <span class="image">
+                            <img src="logo.png" alt="logo">
+                        </span>
+        
+                        <div class="text header-text">
+                            <span class="title">Sterra Medical Center</span>
+                            <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                        </div>
+                    </div>
+                </a>
+    
+            </header>
+            <div class="menu-bar">
+                <div class="menu">
+                    <li class="search-box">
+                            <i class='bx bx-search icon'></i>
+                            <input type="Search" placeholder="Search...">
+                    </li>
+                    <ul class="menu-links">
+                        <li class="nav-link">
+                            <a href="db.html">
+                                <i class='bx bxs-dashboard icon'></i>
+                                <span class="text nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <div class="dd">
+                            <li class="nav-link">
+                                <a href="">
+                                    <i class='bx bx-folder-open icon'></i>
+                                    <span class="text nav-text">Charts</span>
+                                </a>
+                                <div class="dd-content">
+                                    <a href="c.html">Patient List</a>
+                                    <a href="ap.html">Add a patient</a>
+                                </div>
+                            </li>
+                        </div>
+                        <li class="nav-link">
+                            <a href="am.html">
+                                <i class='bx bx-calendar icon'></i>
+                                <span class="text nav-text">Appointment</span>
+                            </a>
+                        </li>
+                        <li class="nav-link">
+                            <a href="f.html">
+                                <i class='bx bx-receipt icon'></i>
+                                <span class="text nav-text">Finances</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+    
+                <div class="bottom-content">
+                    <li class="">
+                        <a href="login.html">
+                            <i class='bx bx-log-out icon'></i>
+                            <span class="text nav-text">logout</span>
+                        </a>
+                    </li>
+                </div>
+            </div>
+        </nav>
+    
+     
+        <script src="script.js"></script>
+    
+</body>
+</html>

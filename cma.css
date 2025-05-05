@@ -1,0 +1,523 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    font-family:'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing:border-box;
+}
+
+:root{
+    --body-color:#E4E9f7;
+    --sidebar-color:#FFF;
+    --primary-color:#695CFE;
+    --primary-color-light:#F6F5FF;
+    --toggle-color:#DDD;
+    --text-color:#707070;
+    --base-color:#205781;
+    --dash-color:#f7f6f2;
+
+    --tran-02: all 0.2s ease ;
+    --tran-03: all 0.3s ease ;
+    --tran-04: all 0.4s ease ;
+    --tran-05: all 0.5s ease ;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background: var(--base-color);
+    overflow-x: hidden;
+}
+
+/*====== resusable CSS =====*/
+.sidebar .text{
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-color);
+    transition: var(--tran-03);
+    white-space: nowrap;
+    opacity: 1;
+}
+
+.sidebar .image{
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+}
+
+/*===== sidebar ======*/
+.sidebar{
+    overflow: visible;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 280px;
+    padding: 10px 14px;
+    background: var(--dash-color);
+    transition: var(--tran-05);
+    z-index: 10000;
+}
+
+.sidebar li{
+    height: 50px;
+    margin-top: 10px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar li .icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px; 
+    font-size: 30px;   
+}
+
+.sidebar li .icon, 
+.sidebar li .text{
+    color: var(--text-color);
+    transition: var(--tran-02);   
+}
+
+.sidebar header{
+    position: relative;
+}
+
+.sidebar .image-text img{
+    width: 50px;
+    border-radius: 6px;
+}
+
+.sidebar header .image-text{
+    display: flex;
+    align-items: center;
+}
+
+header .image-text .header-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.header-text .title{
+    font-weight: 600;
+}
+
+.sidebar header .toggle{
+    position: absolute;
+    top: 50%;
+    right: -25px;
+    transform: translateY(-50%);
+    height: 25px;
+    width: 25px;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--sidebar-color);
+    font-size: 22px;
+}
+
+.sidebar .search-box{
+    background: var(--dash-color);
+}
+
+.search-box input{
+    height: 100%;
+    width: 100%;
+    outline: none;
+    border: none;
+    background: var(--dash-color);
+}
+
+.sidebar li a{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--tran-04);
+}
+
+.sidebar li a:hover{
+    background: var(--base-color);
+}
+
+.sidebar li a:hover .icon,
+.sidebar li a:hover .text{
+    color: var(--sidebar-color)
+}
+
+.sidebar .menu-bar{
+    height: calc(100% - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar .mode{
+    position: relative;
+    border-radius: 6px;
+    background: var(--primary-color);
+}
+
+.menu-bar .mode .toggle-switch{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-width: 60px;
+    cursor: pointer;
+}
+
+.section-title{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    align-items: center;
+    margin-right: 10px;
+    gap: 10px;
+    left: 305px;
+    top: 15px;
+    color: var(--dash-color);
+    z-index: 99;
+}
+  
+.back-btn img{
+    width: 20px;
+    vertical-align: middle;
+}
+  
+.forward-btn img{
+    width: 20px;
+    vertical-align: middle;
+}
+  
+.patient-name{
+    font-size: 25px;
+    margin-left: 692px;
+    color: var(--dash-color);
+    opacity: 0.5;
+}
+
+.dashboard{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    gap: 10px;
+    margin-left: 300px;  /* Leaves space for sidebar */
+    margin-top: 70px;    /* Avoids overlapping the header */
+    width: calc(100% - 300px);
+    box-sizing: border-box;
+    background: var(--dash-color);
+    border-radius: 20px;
+    z-index: 1;
+ }
+
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+    padding: 2px;
+}
+
+.dd{
+    position: relative;
+    z-index: 10000;
+}
+  
+.dd-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10000;
+}
+
+.dd-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+  
+.dd-content a:hover {
+    color: var(--dash-color);
+}
+  
+.dd:hover .dd-content {
+    display: block;
+    position: absolute;
+    left: 80%;
+    border-radius: 10px;
+}
+
+/* new update */
+
+/* Add this to your cma.css file */
+
+/* Allergy and Medication Container Layout */
+.allergy-medication-container {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    gap: 5px;
+}
+
+.medication-container {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+
+/* Section Header Styles */
+.section-header {
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px 5px 0 0;
+    font-size: 16px;
+}
+
+.drug-allergies, .food-allergies, .environmental-allergies {
+    background-color: #2c5282;
+}
+
+.medications {
+    background-color: #2c5282;
+}
+
+/* Allergy Section Styles */
+.allergy-section {
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+    background-color: #f8fafc;
+    width: 100%;
+}
+
+.allergy-content {
+    display: flex;
+    flex-direction: row;
+    padding: 15px;
+}
+
+.allergy-option {
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    margin-right: 80px;
+}
+
+.allergy-option label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.allergy-option .option-text {
+    margin-left: 8px;
+    color: #718096;
+}
+
+/* Checkmark and Radio Button Styles */
+.checkmark {
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border: 1px solid #cbd5e0;
+    display: inline-block;
+    border-radius: 50%;
+    position: relative;
+}
+
+.checkmark.checked:after {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 4px;
+    left: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #4299e1;
+}
+
+.checkbox-custom {
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border: 1px solid #cbd5e0;
+    display: inline-block;
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+}
+
+.checkbox-custom.checked:after {
+    content: "✓";
+    position: absolute;
+    display: block;
+    top: -2px;
+    left: 4px;
+    color: #4299e1;
+    font-weight: bold;
+}
+
+.allergy-checkbox label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #718096;
+}
+
+/* Allergy Options Area */
+.allergy-select-area {
+    padding: 10px;
+    background-color: rgba(178, 235, 242, 0.3);
+    border-radius: 5px;
+}
+
+.select-all-text {
+    font-size: 14px;
+    color: #718096;
+    font-style: italic;
+}
+
+.allergy-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+}
+
+/* Medication Styles */
+.medication-section {
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+    background-color: #f8fafc;
+    width: 100%;
+}
+
+.medication-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.medication-item {
+    border-bottom: 1px solid #e2e8f0;
+    height: 60%;
+}
+
+.medication-item:last-child {
+    border-bottom: none;
+}
+
+.medication-header {
+    display: flex;
+    padding: 20px 15px;
+    align-items: center;
+    cursor: pointer;
+    background-color: rgba(178, 235, 242, 0.3);
+    transition: background-color 0.3s;
+}
+
+.medication-header:hover {
+    background-color: rgba(178, 235, 242, 0.5);
+}
+
+.medication-number {
+    width: 40px;
+    height: 40px;
+    background-color: #b3e0ff;
+    color: #2c5282;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.medication-name {
+    font-size: 16px;
+    color: #2c5282;
+    font-weight: 500;
+    flex-grow: 1;
+}
+
+.medication-details {
+    padding: 15px;
+    background-color: #fff;
+    border-top: 1px solid #e2e8f0;
+}
+
+.medication-info h3 {
+    color: #2c5282;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.medication-alerts, .medication-recorded, .medication-notes {
+    margin-bottom: 15px;
+}
+
+.medication-alerts strong, .medication-recorded strong, .medication-notes strong {
+    display: block;
+    color: #4a5568;
+    margin-bottom: 5px;
+}
+
+.medication-alerts p {
+    color: #e53e3e;
+    font-weight: 500;
+}
+
+.medication-recorded p, .medication-notes p {
+    color: #718096;
+}
+
+/* Active state for medication accordion */
+.medication-item.active .medication-header {
+    background-color: rgba(178, 235, 242, 0.7);
+}
+
+/* Hide radio and checkbox inputs visually but keep them accessible */
+input[type="radio"], input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .allergy-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .medication-header {
+        padding: 10px;
+    }
+    
+    .medication-number {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+    
+    .medication-name {
+        font-size: 14px;
+    }
+    
+    .medication-info h3 {
+        font-size: 14px;
+    }
+}

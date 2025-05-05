@@ -1,0 +1,448 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    font-family:'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing:border-box;
+}
+
+:root{
+    --body-color:#E4E9f7;
+    --sidebar-color:#FFF;
+    --primary-color:#695CFE;
+    --primary-color-light:#F6F5FF;
+    --toggle-color:#DDD;
+    --text-color:#707070;
+    --base-color:#205781;
+    --dash-color:#f7f6f2;
+
+    --tran-02: all 0.2s ease ;
+    --tran-03: all 0.3s ease ;
+    --tran-04: all 0.4s ease ;
+    --tran-05: all 0.5s ease ;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background: var(--base-color);
+    overflow-x: hidden;
+}
+
+/*====== resusable CSS =====*/
+.sidebar .text{
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-color);
+    transition: var(--tran-03);
+    white-space: nowrap;
+    opacity: 1;
+}
+
+.sidebar .image{
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+}
+
+/*===== sidebar ======*/
+.sidebar{
+    overflow: visible;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 280px;
+    padding: 10px 14px;
+    background: var(--dash-color);
+    transition: var(--tran-05);
+    z-index: 10000;
+}
+
+.sidebar li{
+    height: 50px;
+    margin-top: 10px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar li .icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px; 
+    font-size: 30px;   
+}
+
+.sidebar li .icon, 
+.sidebar li .text{
+    color: var(--text-color);
+    transition: var(--tran-02);   
+}
+
+.sidebar header{
+    position: relative;
+}
+
+.sidebar .image-text img{
+    width: 50px;
+    border-radius: 6px;
+}
+
+.sidebar header .image-text{
+    display: flex;
+    align-items: center;
+}
+
+header .image-text .header-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.header-text .title{
+    font-weight: 600;
+}
+
+.sidebar header .toggle{
+    position: absolute;
+    top: 50%;
+    right: -25px;
+    transform: translateY(-50%);
+    height: 25px;
+    width: 25px;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--sidebar-color);
+    font-size: 22px;
+}
+
+.sidebar .search-box{
+    background: var(--dash-color);
+}
+
+.search-box input{
+    height: 100%;
+    width: 100%;
+    outline: none;
+    border: none;
+    background: var(--dash-color);
+}
+
+.sidebar li a{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--tran-04);
+}
+
+.sidebar li a:hover{
+    background: var(--base-color);
+}
+
+.sidebar li a:hover .icon,
+.sidebar li a:hover .text{
+    color: var(--sidebar-color)
+}
+
+.sidebar .menu-bar{
+    height: calc(100% - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar .mode{
+    position: relative;
+    border-radius: 6px;
+    background: var(--primary-color);
+}
+
+.menu-bar .mode .toggle-switch{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-width: 60px;
+    cursor: pointer;
+}
+
+.section-title{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    align-items: center;
+    margin-right: 10px;
+    gap: 10px;
+    left: 305px;
+    top: 15px;
+    color: var(--dash-color);
+    z-index: 99;
+}
+  
+.back-btn img{
+    width: 20px;
+    vertical-align: middle;
+}
+  
+.forward-btn img{
+    width: 20px;
+    vertical-align: middle;
+}
+  
+.patient-name{
+    font-size: 25px;
+    margin-left: 898px;
+    color: var(--dash-color);
+    opacity: 0.5;
+}
+
+.dashboard{
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    margin-left: 300px;
+    margin-top: 70px;
+    min-height: 875px;
+    height: fit-content; 
+    width: calc(100% - 300px);
+    box-sizing: border-box;
+    background: var(--dash-color);
+    border-radius: 20px;
+    z-index: 1;
+ }
+
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+    padding: 2px;
+}
+
+.dd{
+    position: relative;
+    z-index: 10000;
+}
+  
+.dd-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10000;
+}
+
+.dd-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+  
+.dd-content a:hover {
+    color: var(--dash-color);
+}
+  
+.dd:hover .dd-content {
+    display: block;
+    position: absolute;
+    left: 80%;
+    border-radius: 10px;
+}
+
+/* Laboratory Results Styles */
+
+.lab-container {
+    width: 100%;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.hospital-info {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.hospital-left {
+    flex: 1;
+    padding: 20px;
+}
+
+.hospital-name {
+    font-weight: bold;
+    font-size: 22px;
+    color: #000;
+}
+
+.hospital-location {
+    font-size: 16px;
+    color: #333;
+    margin-top: 5px;
+}
+
+.lab-title-header img{
+    margin-right: 30px;
+    height: 100px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lab-title {
+    color: white;
+    padding: 15px;
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+}
+
+.lab-results-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.lab-results-table th {
+    background-color: #1e4e73;
+    color: white;
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: 500;
+}
+
+.lab-results-table tr {
+    background-color: #fff;
+}
+
+.lab-results-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.lab-results-table td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+
+.lab-results-table tr:last-child td {
+    border-bottom: none;
+}
+
+.view-btn{
+    display: flex;
+    margin-top: auto;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border-radius: 10px;
+    width: 80px;
+    height: 30px;
+    color: white;
+    border-color: #4f7296;
+    background-color: #4f7296;
+    transition: 0.2s ease-in-out;
+}
+
+.view-btn:hover{
+    color:black;
+    border-color: white;
+    background-color: white;
+    position: relative;
+    transform: scale(1.08);
+}
+
+/* new upd */
+
+/* Doctor Order Details Styling */
+.doctor-order-details {
+    background-color: #f5f5f5;
+    transition: all 0.3s ease;
+}
+
+.order-details-container {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+    background-color: #fff;
+    margin: 10px 0;
+}
+
+.order-details-header {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #205781;
+    padding-bottom: 15px;
+}
+
+.patient-info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.patient-info-table td {
+    padding: 8px;
+    border: none;
+}
+
+.doctor-order-content h3 {
+    text-align: center;
+    color: #205781;
+    margin: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.order-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.order-details-table th {
+    background-color: #205781;
+    color: white;
+    text-align: left;
+    padding: 10px;
+    font-weight: 500;
+}
+
+.order-details-table td {
+    padding: 15px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.order-details-table ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.order-details-table li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+/* View Button Active State */
+.view-btn.active {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.view-btn.active:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+    color: white;
+}

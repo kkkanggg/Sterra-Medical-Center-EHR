@@ -1,0 +1,1122 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Initial Assessment</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="db.css">
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+    * {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --body-color: #e4e9f7;
+      --sidebar-color: #fff;
+      --primary-color: #695cfe;
+      --primary-color-light: #f6f5ff;
+      --toggle-color: #ddd;
+      --text-color: #707070;
+      --base-color: #205781;
+      --dash-color: #f7f6f2;
+      --light-blue: #afdbe8;
+      --light-gray: #f7f6f2;
+
+      --tran-02: all 0.2s ease;
+      --tran-03: all 0.3s ease;
+      --tran-04: all 0.4s ease;
+      --tran-05: all 0.5s ease;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      background: var(--base-color);
+      overflow-x: hidden;
+    }
+
+    .dashboard {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      margin-left: 300px;
+      margin-top: 70px;
+      width: calc(100% - 300px);
+      box-sizing: border-box;
+      background: var(--dash-color);
+      border-radius: 20px;
+    }
+
+    .left-section,
+    .right-section {
+      padding: 2px;
+    }
+
+    .left-section {
+      flex: 1;
+      max-width: 33%;
+    }
+
+    .right-section {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
+    .badge {
+      background-color: var(--light-gray);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .section {
+      background-color: #ffffff;
+      padding: 8px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      margin-right: 10px;
+      height: auto;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+    }
+
+    .section h2 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .flex {
+      display: flex;
+      align-items: center;
+    }
+
+    .circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    .bg-red {
+      background-color: #f44336;
+    }
+    .bg-black {
+      background-color: #000000;
+    }
+    .bg-yellow {
+      background-color: #ffeb3b;
+    }
+    .bg-green {
+      background-color: #4cfc17;
+    }
+    
+
+    .checkbox {
+      margin-right: 8px;
+    }
+
+    .input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #bdbdbd;
+      border-radius: 4px;
+    }
+
+    .pain-scale {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pain-scale-slider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pain-scale-slider input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #e0e0e0;
+      height: 8px;
+      border-radius: 4px;
+      outline: none;
+      margin: 0;
+    }
+
+    .pain-scale-slider input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #000000;
+      cursor: pointer;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+
+    .pain-scale-slider input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: #000000;
+      cursor: pointer;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+
+    .pain-scale-findings {
+      display: flex;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #111;
+      margin-top: 4px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .card i {
+      font-size: 32px;
+      color: #0d47a1;
+      margin-bottom: 8px;
+    }
+
+    .card .title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .card .value {
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .status i {
+      margin-right: 4px;
+    }
+
+    .value input {
+      width: 60px;
+      min-width: 60px;
+      max-width: 60px;
+      border: none;
+      text-align: right;
+      font-size: 24px;
+      font-weight: bold;
+      background: transparent;
+    }
+
+    .status.green {
+      color: #4caf50;
+    }
+    .status.red {
+      color: #f44336;
+    }
+    .status.yellow {
+      color: #ffeb3b;
+    }
+    .status.orange {
+      color: #ff9800;
+    }
+    .status.blue {
+      color: #00008B;
+    }
+
+    .chief-complaint,
+    .label-container {
+      background-color: var(--light-blue);
+      padding: 2px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .label-container {
+      background-color: var(--light-blue);
+      padding: 2px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .vital-signs {
+      background-color: var(--light-blue);
+      padding: 8px;
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: start;
+      max-width: 90%;
+      height: 765px;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+    }
+
+    .vital-signs h2 {
+      grid-column: span 2;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 5px;
+      margin-top: 5px;
+    }
+
+    .sidebar2 {
+      margin-top: 65px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+      background-color: var(--dash-color);
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+      z-index: 2;
+    }
+
+    .openbtn {
+      position: absolute;
+      top: 40%;
+      right: 3rem;
+      transform: translateY(-50%);
+      font-size: 20px;
+      cursor: pointer;
+      background-color: var(--base-color);
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 20%;
+      z-index: 3;
+      transition: right 0.5s;
+    }
+
+    .sidebar1 {
+      background-color: var(--dash-color);
+      border-radius: 10px;
+      padding: 10px;
+      margin-left: 10px;
+      width: 350px;
+      height: 725px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .photo-container {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .profile-photo {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .patient-info-container {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+      margin: 0;
+    }
+
+    .patient-info-column {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      font-weight: lighter;
+      padding: 25px;
+    }
+
+    .patient-info-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .patient-info-label {
+      font-size: 14px;
+      font-weight: normal;
+      color: gray;
+    }
+
+    .patient-info-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: black;
+      line-height: 1.5;
+    }
+
+    .enlarged-box {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .button {
+      background-color: #1e3a8a;
+      color: #ffffff;
+      font-weight: bold;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 105px;
+    }
+
+    .section-title {
+      display: flex;
+      flex-direction: row;
+      position: fixed;
+      align-items: center;
+      margin-right: 10px;
+      gap: 10px;
+      left: 305px;
+      top: 15px;
+      color: var(--dash-color);
+      z-index: 99;
+    }
+
+    .back-btn img {
+      width: 20px;
+    }
+
+    .forward-btn img {
+      width: 20px;
+    }
+
+    .patient-name-title {
+      font-size: 25px;
+      margin-left: 855px;
+      color: var(--dash-color);
+      opacity: 0.5;
+    }
+
+    .patient-number{
+    color: grey;
+    font-size: 12px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.patient-number:hover{
+    color: var(--base-color);
+    width: fit-content;
+}
+
+    @media (max-width: 1024px) {
+      .dashboard {
+        margin-left: 0;
+        width: 100%;
+        flex-direction: column;
+        height: auto;
+      }
+      .left-section {
+        max-width: 100%;
+        flex: none;
+      }
+      .right-section {
+        flex: none;
+        max-width: 100%;
+      }
+      .section-title {
+        left: 10px;
+        margin-left: 0;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .patient-name-title {
+        margin-left: 0;
+        opacity: 1;
+        font-size: 18px;
+        margin-top: 5px;
+      }
+      .sidebar1 {
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin-left: 0;
+        margin-top: 10px;
+      }
+      .sidebar2 {
+        position: relative;
+        width: 100% !important;
+        height: auto;
+        margin-top: 10px;
+        box-shadow: none;
+      }
+      .openbtn {
+        position: fixed;
+        top: auto;
+        bottom: 10px;
+        right: 10px;
+        z-index: 9999;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="section-title">
+    <div class="back-btn">
+      <a href="cprf.html">
+        <img src="las.png" alt="back arrow" />
+      </a>
+    </div>
+    <h2 style="font-size: 30px; font-weight: bold;">INITIAL ASSESSMENT</h2>
+    <div class="forward-btn">
+      <a href="cvsm.html">
+        <img src="ras.png" alt="forward arrow" />
+      </a>
+    </div>
+    <text class="patient-name-title">MAGSAYSAY, THEODORE P.</text>
+  </div>
+  <div class="dashboard" id="searchable-content">
+    <div class="left-section">
+      <div class="label-container">
+        <span>CHIEF COMPLAINT: HYPERTENSION</span>
+      </div>
+      <div class="section">
+        <div class="label-container">
+          <h2>TRIAGE LEVEL (SEVERITY ASSESSMENT)</h2>
+        </div>
+        <div class="grid-2">
+          <div class="flex">
+            <span class="circle bg-red"></span> Emergency
+          </div>
+          <div class="flex">
+            <span class="circle bg-black"></span> Dead
+          </div>
+          <div class="flex">
+            <span class="circle bg-yellow"></span> Urgent
+          </div>
+          <div class="flex">
+            <span class="circle bg-green"></span> Non-urgent
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="label-container">
+          <h2>LEVEL OF CONCIOUSNESS (AVPU SCALE)</h2>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="flex mb-2">
+              <input type="checkbox" class="checkbox" />
+              <span>Alert</span>
+            </div>
+            <div class="flex mb-2">
+              <input type="checkbox" class="checkbox" />
+              <span>Verbal</span>
+            </div>
+            <div class="flex mb-2">
+              <input type="checkbox" class="checkbox" />
+              <span>Pain</span>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" class="checkbox" />
+              <span>Unresponsive</span>
+            </div>
+          </div>
+          <div>
+            <label for="remarks" class="block font-bold mb-1">Remarks:</label>
+            <input
+              type="text"
+              id="remarks"
+              class="input"
+              placeholder="type here"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="label-container">
+          <h2>PAIN SCALE</h2>
+        </div>
+        <div class="pain-scale">
+          <div class="pain-scale-findings" id="painFindings">
+            Patient Findings: 6/10 = Mild chest tightness or palpitations
+          </div>
+          <div class="pain-scale-slider">
+            <span>0</span>
+            <input type="range" min="0" max="10" value="6" id="painRange" />
+            <span>10</span>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="label-container">
+          <h2>HEIGHT, WEIGHT &amp; BMI</h2>
+        </div>
+        <div class="grid-2">
+          <div>
+            <label for="heightCm" class="block font-bold mb-1">Height (cm):</label>
+            <input
+              type="number"
+              id="heightCm"
+              class="input"
+              placeholder="Enter height in cm"
+              min="0"
+              autocomplete="off"
+            />
+          </div>
+          <div>
+            <label for="weight" class="block font-bold mb-1">Weight (kg):</label>
+            <input
+              type="number"
+              id="weight"
+              class="input"
+              placeholder="Enter weight in kg"
+              min="0"
+              autocomplete="off"
+            />
+          </div>
+          <div>
+            <label class="block font-bold mb-1">BMI:</label>
+            <button
+              id="bmiButton"
+              class="input text-left cursor-pointer"
+              type="button"
+              aria-label="Calculate BMI"
+            >
+              Calculate BMI
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="right-section">
+      <div class="vital-signs">
+        <h2>VITAL SIGNS</h2>
+        <div class="card" id="tempCard">
+          <i class="fas fa-thermometer-half"></i>
+          <div class="title">Temperature</div>
+          <div class="value">
+            <input type="text" id="tempInput" value="37.2" autocomplete="off" />°C
+          </div>
+          <div class="status" id="tempStatus"></div>
+        </div>
+        <div class="card" id="heartCard">
+          <i class="fas fa-heartbeat"></i>
+          <div class="title">Heart Rate</div>
+          <div class="value">
+            <input type="text" id="heartInput" value="110" autocomplete="off" />bpm
+          </div>
+          <div class="status" id="heartStatus"></div>
+        </div>
+        <div class="card" id="bpCard">
+          <i class="fas fa-tachometer-alt"></i>
+          <div class="title">Blood Pressure</div>
+          <div class="value">
+            <input
+              type="text"
+              id="bpSystolic"
+              class="border border-black rounded px-1 text-right font-bold"
+              value="150"
+              maxlength="3"
+              autocomplete="off"
+              aria-label="Systolic blood pressure"
+            />
+            /
+            <input
+              type="text"
+              id="bpDiastolic"
+              class="border border-black rounded px-1 text-right font-normal"
+              value="90"
+              maxlength="3"
+              autocomplete="off"
+              aria-label="Diastolic blood pressure"
+            />
+            mm HG
+          </div>
+          <div class="status" id="bpStatus"></div>
+        </div>
+        <div class="card" id="rrCard">
+          <i class="fas fa-lungs"></i>
+          <div class="title">Respiratory Rate</div>
+          <div class="value">
+            <input type="text" id="rrInput" value="22" autocomplete="off" />bpm
+          </div>
+          <div class="status" id="rrStatus"></div>
+        </div>
+        <div class="card" id="o2Card">
+          <i class="fas fa-lungs"></i>
+          <div class="title">Oxygen Saturation</div>
+          <div class="value">
+            <input type="text" id="o2Input" value="94" autocomplete="off" />%
+          </div>
+          <div class="status" id="o2Status"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar2" id="mySidebar">
+    <div class="sidebar1">
+      <div class="photo-container">
+        <img src="p1.png" alt="Patient Photo" class="profile-photo" />
+        <h2>
+          <a href="medical_history.html" style="text-decoration: none; color: inherit;">
+            Magsaysay,<br /> Theodore P. <br> <text class="patient-number">00104092025</text>
+          </a>
+        </h2>
+      </div>
+      <div class="patient-info-container">
+        <div class="patient-info-column">
+          <div class="patient-info-item">
+            <div class="patient-info-label">Gender</div>
+            <div class="patient-info-value">Male</div>
+          </div>
+          <div class="patient-info-item">
+            <div class="patient-info-label">Religion</div>
+            <div class="patient-info-value">Roman Catholic</div>
+          </div>
+          <div class="patient-info-item">
+            <div class="patient-info-label">Civil Status</div>
+            <div class="patient-info-value">Single</div>
+          </div>
+          <div class="patient-info-item">
+            <div class="patient-info-label">Citizenship</div>
+            <div class="patient-info-value">Filipino</div>
+          </div>
+        </div>
+        <div class="patient-info-column">
+          <div class="patient-info-item">
+            <div class="patient-info-label">Birthdate</div>
+            <div class="patient-info-value">09/26/2000</div>
+          </div>
+          <div class="patient-info-item">
+            <div class="patient-info-label">Place of Birth</div>
+            <div class="patient-info-value">Makati City</div>
+          </div>
+          <div class="patient-info-item">
+            <div class="patient-info-label">Contact #</div>
+            <div class="patient-info-value">+6390000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="openbtn" id="openBtn" onclick="toggleNav()">&lt;</button>
+
+  <script>
+
+    function updateVitalSigns() {
+ // Temperature evaluation
+const tempVal = parseFloat(document.getElementById("tempInput").value);
+const tempStatus = document.getElementById("tempStatus");
+if (tempVal < 36.6) {
+  tempStatus.innerHTML = '<i class="fas fa-arrow-down" style="color: inherit;"></i> Lower than average';
+  tempStatus.className = "status red";
+} else if (tempVal <= 37.5) {
+  tempStatus.innerHTML = '<i class="fas fa-check-circle" style="color: inherit;"></i> Average';
+  tempStatus.className = "status green";
+} else {
+  tempStatus.innerHTML = '<i class="fas fa-exclamation-circle" style="color: inherit;"></i> Higher than average';
+  tempStatus.className = "status red";
+}
+
+// Heart Rate evaluation
+const heartVal = parseInt(document.getElementById("heartInput").value);
+const heartStatus = document.getElementById("heartStatus");
+if (heartVal < 60) {
+  heartStatus.innerHTML = '<i class="fas fa-exclamation-circle" style="color: inherit;"></i> Alarming';
+  heartStatus.className = "status red";
+} else if (heartVal <= 100) {
+  heartStatus.innerHTML = '<i class="fas fa-check-circle" style="color: inherit;"></i> Normal';
+  heartStatus.className = "status green";
+} else if (heartVal <= 150) {
+  heartStatus.innerHTML = '<i class="fas fa-arrow-up" style="color: inherit;"></i> Alarming';
+  heartStatus.className = "status red";
+} else {
+  heartStatus.innerHTML = '<i class="fas fa-exclamation-circle" style="color: inherit;"></i> Alarming';
+  heartStatus.className = "status red";
+}
+
+// Respiratory Rate evaluation
+const rrVal = parseInt(document.getElementById("rrInput").value);
+const rrStatus = document.getElementById("rrStatus");
+if (rrVal < 12) {
+  rrStatus.innerHTML = '<i class="fas fa-exclamation-circle" style="color: inherit;"></i> Alarming';
+  rrStatus.className = "status red";
+} else if (rrVal <= 20) {
+  rrStatus.innerHTML = '<i class="fas fa-check-circle" style="color: inherit;"></i> Normal';
+  rrStatus.className = "status green";
+} else if (rrVal <= 24) {
+  rrStatus.innerHTML = '<i class="fas fa-check-circle" style="color: inherit;"></i> Higher than average';
+  rrStatus.className = "status orange";
+} else if (rrVal >= 25) {
+  rrStatus.innerHTML = '<i class="fas fa-arrow-up" style="color: inherit;"></i> Alarming';
+  rrStatus.className = "status red";
+} else {
+  rrStatus.innerHTML = '<i class="fas fa-exclamation-circle" style="color: inherit;"></i> Alarming';
+  rrStatus.className = "status red";
+}
+
+
+const systolic = parseInt(document.getElementById("bpSystolic").value);
+const diastolic = parseInt(document.getElementById("bpDiastolic").value);
+const bpStatus = document.getElementById("bpStatus");
+
+if (isNaN(systolic) || isNaN(diastolic) || systolic <= 0 || diastolic <= 0) {
+  bpStatus.innerHTML = '<i class="fas fa-times-circle" style="color: inherit;"></i> Invalid Format';
+  bpStatus.className = "status red";
+} else if (systolic >= 180 || diastolic >= 120) {
+  bpStatus.innerHTML = '<i class="fas fa-skull-crossbones" style="color: inherit;"></i> Alarming';
+  bpStatus.className = "status red";
+} else if (systolic >= 140 || diastolic >= 90) {
+  bpStatus.innerHTML = '<i class="fas fa-exclamation-circle" style="color: inherit;"></i> Alarming';
+  bpStatus.className = "status red";
+} else if (systolic >= 120 || diastolic < 80) {
+  bpStatus.innerHTML = '<i class="fas fa-arrow-up" style="color: inherit;"></i> Normal Blood Pressure';
+  bpStatus.className = "status green";
+} else if (systolic >= 90 || diastolic < 60) {
+  bpStatus.innerHTML = '<i class="fas fa-arrow-up" style="color: inherit;"></i> Below Normal Blood Pressure';
+  bpStatus.className = "status orange";
+} else {
+  bpStatus.innerHTML = '<i class="fas fa-check-circle" style="color: inherit;"></i> Normal Blood Pressure';
+  bpStatus.className = "status green";
+}
+
+const oxygenVal = parseFloat(document.getElementById("o2Input").value);
+const oxygenStatus = document.getElementById("o2Status");
+
+if (isNaN(oxygenVal) || oxygenVal <= 0) {
+  oxygenStatus.innerHTML = '<i class="fas fa-times-circle" style="color: inherit;"></i> Invalid Format';
+  oxygenStatus.className = "status red";
+} else if (oxygenVal < 85) {
+  oxygenStatus.innerHTML = '<i class="fas fa-skull-crossbones" style="color: inherit;"></i> Severe Hypoxia';
+  oxygenStatus.className = "status red";
+} else if (oxygenVal < 89) {
+  oxygenStatus.innerHTML = '<i class="fas fa-exclamation-circle" style="color: inherit;"></i> Moderate';
+  oxygenStatus.className = "status orange";
+} else if (oxygenVal < 95) {
+  oxygenStatus.innerHTML = '<i class="fas fa-minus" style="color: inherit;"></i> Mild Hypoxia';
+  oxygenStatus.className = "status blue";
+} else {
+  oxygenStatus.innerHTML = '<i class="fas fa-check-circle" style="color: inherit;"></i> Normal Oxygen Saturation';
+  oxygenStatus.className = "status green";
+}
+    }
+
+    document.querySelectorAll("input").forEach((input) => {
+      input.addEventListener("input", updateVitalSigns);
+    });
+
+    updateVitalSigns();
+
+    function toggleNav() {
+      const sidebar2 = document.getElementById("mySidebar");
+      const openBtn = document.getElementById("openBtn");
+      if (sidebar2.style.width === "400px") {
+        sidebar2.style.width = "0";
+        openBtn.style.right = "3rem";
+      } else {
+        sidebar2.style.width = "400px";
+        openBtn.style.right = "403px";
+      }
+    }
+
+    function calculateBMI() {
+      const weight = parseFloat(document.getElementById("weight").value);
+      const heightCm = parseFloat(document.getElementById("heightCm").value);
+
+      if (!heightCm || heightCm <= 0) {
+        alert("Invalid height");
+        return;
+      }
+
+      if (!weight || weight <= 0) {
+        alert("Invalid weight");
+        return;
+      }
+
+      const heightMeters = heightCm / 100;
+      const bmi = weight / (heightMeters * heightMeters);
+      let classification = "";
+
+      if (bmi < 18.5) classification = "Underweight";
+      else if (bmi < 25) classification = "Normal weight";
+      else if (bmi < 30) classification = "Overweight";
+      else if (bmi < 35) classification = "Obese Class I";
+      else if (bmi < 40) classification = "Obese Class II";
+      else classification = "Obese Class III (Morbid)";
+
+      const bmiButton = document.getElementById("bmiButton");
+      bmiButton.textContent = `${bmi.toFixed(1)} = ${classification}`;
+    }
+
+    document.getElementById("bmiButton").addEventListener("click", calculateBMI);
+
+    // Pain scale findings update
+    const painRange = document.getElementById("painRange");
+    const painFindings = document.getElementById("painFindings");
+
+    function updatePainFindings() {
+      const val = parseInt(painRange.value);
+      let classification = "";
+      let color = "#111";
+
+      if (val === 0) {
+        classification = "Normal (No pain)";
+        color = "green";
+      } else if (val >= 1 && val <= 3) {
+        classification = "Mild";
+        color = "green";
+      } else if (val >= 4 && val <= 6) {
+        classification = "Moderate";
+        color = "orange";
+      } else if (val >= 7 && val <= 10) {
+        classification = "Severe";
+        color = "red";
+      }
+
+      painFindings.textContent = `${val} = ${classification}`;
+      painFindings.style.color = color;
+    }
+
+    painRange.addEventListener("input", updatePainFindings);
+    updatePainFindings();
+  </script>
+   <script>
+    window.onload = function () {
+        let username = localStorage.getItem("nurseName");
+
+        if (username) {
+            document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                el.textContent = username;
+            });
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector(".search-box input");
+        const patientCards = document.querySelectorAll(".container-grid1 a");
+
+        // Store original HTML for each card for accurate highlighting
+        patientCards.forEach(card => {
+            card.setAttribute("data-original-html", card.innerHTML);
+        });
+
+        searchInput.addEventListener("input", function () {
+            const searchText = searchInput.value.toLowerCase().trim();
+
+            patientCards.forEach(card => {
+                // Reset to original content first
+                card.innerHTML = card.getAttribute("data-original-html");
+
+                const nameEl = card.querySelector(".name");
+                const numEl = card.querySelector(".patient-number");
+
+                const nameText = nameEl.textContent.toLowerCase();
+                const numText = numEl.textContent.toLowerCase();
+
+                const matches = nameText.includes(searchText) || numText.includes(searchText);
+
+                if (searchText === "") {
+                    card.style.display = "";
+                    return;
+                }
+
+                if (matches) {
+                    card.style.display = "";
+
+                    const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+
+                    highlightText(nameEl, regex);
+                    highlightText(numEl, regex);
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+        function highlightText(element, regex) {
+            element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+        }
+    });
+
+// new update esi level
+
+// Apply ESI level styling when page loads
+window.addEventListener("load", function() {
+    const esiLevel = localStorage.getItem("selectedESILevel");
+    
+    if (esiLevel) {
+        // Get the appropriate circle element based on ESI level
+        let circleElement;
+        
+        switch(esiLevel) {
+            case "1":
+                circleElement = document.querySelector(".circle.bg-red");
+                break;
+            case "2":
+                circleElement = document.querySelector(".circle.bg-red");
+                break;
+            case "3":
+                circleElement = document.querySelector(".circle.bg-yellow");
+                break;
+            case "4":
+                circleElement = document.querySelector(".circle.bg-green");
+                break;
+            case "5":
+                circleElement = document.querySelector(".circle.bg-green");
+                break;
+            default:
+                return;
+        }
+        
+        if (circleElement) {
+            // Highlight the parent element containing the circle and text
+            const parentElement = circleElement.parentElement;
+            parentElement.style.color = "#fff";
+            parentElement.style.backgroundColor = "#205781";
+            parentElement.style.padding = "5px";
+            parentElement.style.borderRadius = "5px";
+            parentElement.style.boxShadow = "0 0 2px rgba(0, 123, 255, 0.7)";
+            parentElement.style.transform = "scale(1.03)";
+            parentElement.style.transition = "all 0.3s ease";
+            parentElement.style.fontWeight = "bold";
+            
+            // Add a subtle pulse animation
+            
+            
+            // Add the animation keyframes
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes pulse {
+                    0% {
+                        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+                    }
+                    70% {
+                        box-shadow: 0 0 8px 5px rgba(0, 123, 255, 0);
+                    }
+                    100% {
+                        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+});
+</script>
+</head>
+<body>
+
+<nav class = "sidebar close">
+    <header>
+        <a href="home.html" style="text-decoration:none">
+            <div class="image-text">
+                <span class="image">
+                    <img src="logo.png" alt="logo">
+                </span>
+
+                <div class="text header-text">
+                    <span class="title">Sterra Medical Center</span>
+                    <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                </div>
+            </div>
+        </a>
+
+    </header>
+    <div class="menu-bar">
+        <div class="menu">
+            <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="Search" placeholder="Search...">
+            </li>
+            <ul class="menu-links">
+                <li class="nav-link">
+                    <a href="db.html">
+                        <i class='bx bxs-dashboard icon'></i>
+                        <span class="text nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <div class="dd">
+                    <li class="nav-link">
+                        <a href="">
+                            <i class='bx bx-folder-open icon'></i>
+                            <span class="text nav-text">Charts</span>
+                        </a>
+                        <div class="dd-content">
+                            <a href="c.html">Patient List</a>
+                            <a href="ap.html">Add a patient</a>
+                        </div>
+                    </li>
+                </div>
+                <li class="nav-link">
+                    <a href="am.html">
+                        <i class='bx bx-calendar icon'></i>
+                        <span class="text nav-text">Appointment</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="f.html">
+                        <i class='bx bx-receipt icon'></i>
+                        <span class="text nav-text">Finances</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bottom-content">
+            <li class="">
+                <a href="login.html">
+                    <i class='bx bx-log-out icon'></i>
+                    <span class="text nav-text">logout</span>
+                </a>
+            </li>
+        </div>
+    </div>
+</nav>
+
+
+
+</body>
+</html>

@@ -1,0 +1,956 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+  <link rel="stylesheet" href="db.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <title>Health History</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    * {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --body-color: #E4E9f7;
+      --sidebar-color: #FFF;
+      --primary-color: #695CFE;
+      --primary-color-light: #F6F5FF;
+      --toggle-color: #DDD;
+      --text-color: #707070;
+      --base-color: #205781;
+      --dash-color: #f7f6f2;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--base-color);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .section-title{
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    align-items: center;
+    margin-right: 10px;
+    gap: 10px;
+    left: 305px;
+    top: 15px;
+    color: var(--dash-color);
+    z-index: 99;
+}
+  
+.back-btn img{
+    width: 20px;
+    vertical-align: middle;
+}
+  
+.forward-btn img{
+    width: 20px;
+    vertical-align: middle;
+}
+  
+.patient-name{
+    font-size: 25px;
+    margin-left: 910px;
+    color: var(--dash-color);
+    opacity: 0.5;
+}
+
+    .dashboard {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 12px 12px; /* Adjusted padding */
+      margin-left: 300px; /* Leaves space for sidebar */
+      margin-top: 70px; /* Avoids overlapping the header */
+      width: calc(100% - 300px);
+      box-sizing: border-box;
+      background: var(--dash-color);
+      border-radius: 20px;
+      z-index: 1;
+      gap: 12px;
+      justify-content: center;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hopi-cont {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px 12px;
+      justify-content: center;
+      background-color: var(--dash-color);
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.25);
+      border-radius: 20px;
+    }
+
+    .header-container {
+      background-color: var(--dash-color);
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.25);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-radius: 20px;
+    }
+
+    .chief-complaint {
+      background-color: var(--dash-color);
+      border-radius: 12px;
+      padding: 8px 16px;
+      color: black;
+      font-size: 18px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    .chief-complaint strong {
+      font-weight: 900;
+      color: var(--base-color);
+    }
+
+    .title1 {
+      background: var(--dash-color);
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--base-color);
+      text-align: center;
+      padding: 3px 0;
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    .box {
+      background-color: #4f7a9e;
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #d9e6f2;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 750px;
+      position: relative;
+     
+    }
+
+    .label {
+      font-weight: 700;
+      font-size: 14px;
+      min-width: auto;
+      color: #d9e6f2;
+    }
+
+    select,
+    input[type="text"],
+    textarea {
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      padding: 4px 8px;
+      border: 1px solid black;
+      border-radius: 2px;
+      box-sizing: border-box;
+      background: white;
+      color: black;
+      width: 100%;
+      cursor: text;
+    }
+
+    textarea {
+      resize: none;
+      min-height: 72px;
+    }
+
+    .remarks-label {
+      font-weight: 600;
+      font-size: 12px;
+      color: #d9e6f2;
+      margin-top: 4px;
+      margin-bottom: 0;
+    }
+
+    .flex-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .flex-row > * {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .severity-selects {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 4px;
+      width: 100%;
+    }
+
+    .severity-selects select:first-child {
+      max-width: 160px;
+      flex: none;
+    }
+
+    .severity-selects select:last-child {
+      flex: 1 1 auto;
+      max-width: 100%;
+    }
+
+    /* Duration multiple selects container */
+    .duration-selects {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .duration-selects select {
+      flex: 1 1 0;
+      min-width: 120px;
+    }
+
+    /* Frequency selects container */
+    .frequency-selects {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      width: 100%;
+    }
+
+    .frequency-selects select {
+      flex: 1 1 0;
+      min-width: 120px;
+    }
+
+    @media (max-width: 1024px) {
+      .box {
+        max-width: 100%;
+      }
+      .dashboard {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 768px) {
+      main.dashboard {
+        margin-left: 0;
+        margin-top: 0;
+        width: 100%;
+        border-radius: 0;
+        padding: 12px;
+        height: 100vh;
+      }
+      .flex-row,
+      .severity-selects,
+      .duration-selects,
+      .frequency-selects {
+        flex-direction: column;
+      }
+      .severity-selects select,
+      .duration-selects select,
+      .frequency-selects select {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+    }
+    
+  </style>
+</head>
+
+    
+<body>
+  <div class="section-title">
+    <div class="back-btn">
+        <a href="cir2.html">
+            <img src="las.png" alt="las">
+        </a>
+    </div>
+    <h2 style="font-size: 30px;">HEALTH HISTORY</h2>
+    <div class="forward-btn">
+        <a href="chhpa.html">
+            <img src="ras.png" alt="ras">
+        </a>
+    </div>
+    <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+  </div>  
+  <main class="dashboard" role="main" aria-label="History of Present Illness">
+    <div class="header-container">
+      <section class="chief-complaint">
+        <strong>CHIEF COMPLAINT:</strong>
+        <span>Patient feeling dizzy for 3 days, and heart races all of a sudden.</span>
+      </section>
+    </div>
+
+    <div class="hopi-cont">
+      <section class="title1">HISTORY OF PRESENT ILLNESS</section>
+      <!-- ONSET -->
+      <div class="box" aria-label="Onset">
+        <div class="label">ONSET</div>
+        <select aria-label="Onset select">
+          <option selected>Sudden</option>
+          <option>Gradual</option>
+          <option>No clear onset</option>
+          <option>After exertion</option>
+          <option>After stress</option>
+          <option>After eating</option>
+          <option>After medication changes</option>
+        </select>
+        <p class="remarks-label">Remarks:</p>
+        <input type="text" value="Episodes of heart racing" aria-label="Onset remarks" />
+      </div>
+  
+      <!-- LOCATION -->
+      <div class="box" aria-label="Location">
+        <div class="label">LOCATION</div>
+        <div class="flex-row">
+          <select aria-label="Location head select">
+            <option selected>Head</option>
+            <option>Chest</option>
+            <option>Abdomen</option>
+            <option>Limbs</option>
+            <option>Neck</option>
+            <option >Generalized</option>
+            <option>None (systemic symptoms)</option>
+          </select>
+          <select aria-label="Location generalized select">
+            <option >Head</option>
+            <option selected>Generalized</option>
+            <option>None (systemic symptoms)</option>
+            <option>Chest</option>
+            <option>Abdomen</option>
+            <option>Limbs</option>
+            <option>Neck</option>
+          </select>
+        </div>
+        <p class="remarks-label">Remarks:</p>
+        <input type="text" value="Dizziness & lightheadedness with palpitations" aria-label="Location remarks" />
+      </div>
+  
+      <!-- DURATION -->
+      <div class="box" aria-label="Duration">
+     <!-- DURATION -->
+  <div class="box" aria-label="Duration">
+    <div class="label">DURATION</div>
+    <div class="duration-selects" aria-label="Duration time select">
+      <select aria-label="Seconds select">
+        <option disabled selected>Seconds</option>
+        <option value="1">1 second</option>
+        <option value="2">2 seconds</option>
+        <option value="3">3 seconds</option>
+        <option value="4">4 seconds</option>
+        <option value="5">5 seconds</option>
+        <option value="6">6 seconds</option>
+        <option value="7">7 seconds</option>
+        <option value="8">8 seconds</option>
+        <option value="9">9 seconds</option>
+        <option value="10">10 seconds</option>
+        <option value="11">11 seconds</option>
+        <option value="12">12 seconds</option>
+        <option value="13">13 seconds</option>
+        <option value="14">14 seconds</option>
+        <option value="15">15 seconds</option>
+        <option value="16">16 seconds</option>
+        <option value="17">17 seconds</option>
+        <option value="18">18 seconds</option>
+        <option value="19">19 seconds</option>
+        <option value="20">20 seconds</option>
+        <option value="21">21 seconds</option>
+        <option value="22">22 seconds</option>
+        <option value="23">23 seconds</option>
+        <option value="24">24 seconds</option>
+        <option value="25">25 seconds</option>
+        <option value="26">26 seconds</option>
+        <option value="27">27 seconds</option>
+        <option value="28">28 seconds</option>
+        <option value="29">29 seconds</option>
+        <option value="30">30 seconds</option>
+        <option value="31">31 seconds</option>
+        <option value="32">32 seconds</option>
+        <option value="33">33 seconds</option>
+        <option value="34">34 seconds</option>
+        <option value="35">35 seconds</option>
+        <option value="36">36 seconds</option>
+        <option value="37">37 seconds</option>
+        <option value="38">38 seconds</option>
+        <option value="39">39 seconds</option>
+        <option value="40">40 seconds</option>
+        <option value="41">41 seconds</option>
+        <option value="42">42 seconds</option>
+        <option value="43">43 seconds</option>
+        <option value="44">44 seconds</option>
+        <option value="45">45 seconds</option>
+        <option value="46">46 seconds</option>
+        <option value="47">47 seconds</option>
+        <option value="48">48 seconds</option>
+        <option value="49">49 seconds</option>
+        <option value="50">50 seconds</option>
+        <option value="51">51 seconds</option>
+        <option value="52">52 seconds</option>
+        <option value="53">53 seconds</option>
+        <option value="54">54 seconds</option>
+        <option value="55">55 seconds</option>
+        <option value="56">56 seconds</option>
+        <option value="57">57 seconds</option>
+        <option value="58">58 seconds</option>
+        <option value="59">59 seconds</option>
+        <option value="60">60 seconds</option>
+      </select>
+  
+      <select aria-label="Minutes select">
+        <option disabled selected>Minutes</option>
+        <option value="1">1 minute</option>
+        <option value="2">2 minutes</option>
+        <option value="3">3 minutes</option>
+        <option value="4">4 minutes</option>
+        <option value="5">5 minutes</option>
+        <option value="6">6 minutes</option>
+        <option value="7">7 minutes</option>
+        <option value="8">8 minutes</option>
+        <option value="9">9 minutes</option>
+        <option value="10">10 minutes</option>
+        <option value="11">11 minutes</option>
+        <option value="12">12 minutes</option>
+        <option value="13">13 minutes</option>
+        <option value="14">14 minutes</option>
+        <option value="15">15 minutes</option>
+        <option value="16">16 minutes</option>
+        <option value="17">17 minutes</option>
+        <option value="18">18 minutes</option>
+        <option value="19">19 minutes</option>
+        <option value="20">20 minutes</option>
+        <option value="21">21 minutes</option>
+        <option value="22">22 minutes</option>
+        <option value="23">23 minutes</option>
+        <option value="24">24 minutes</option>
+        <option value="25">25 minutes</option>
+        <option value="26">26 minutes</option>
+        <option value="27">27 minutes</option>
+        <option value="28">28 minutes</option>
+        <option value="29">29 minutes</option>
+        <option value="30">30 minutes</option>
+        <option value="31">31 minutes</option>
+        <option value="32">32 minutes</option>
+        <option value="33">33 minutes</option>
+        <option value="34">34 minutes</option>
+        <option value="35">35 minutes</option>
+        <option value="36">36 minutes</option>
+        <option value="37">37 minutes</option>
+        <option value="38">38 minutes</option>
+        <option value="39">39 minutes</option>
+        <option value="40">40 minutes</option>
+        <option value="41">41 minutes</option>
+        <option value="42">42 minutes</option>
+        <option value="43">43 minutes</option>
+        <option value="44">44 minutes</option>
+        <option value="45">45 minutes</option>
+        <option value="46">46 minutes</option>
+        <option value="47">47 minutes</option>
+        <option value="48">48 minutes</option>
+        <option value="49">49 minutes</option>
+        <option value="50">50 minutes</option>
+        <option value="51">51 minutes</option>
+        <option value="52">52 minutes</option>
+        <option value="53">53 minutes</option>
+        <option value="54">54 minutes</option>
+        <option value="55">55 minutes</option>
+        <option value="56">56 minutes</option>
+        <option value="57">57 minutes</option>
+        <option value="58">58 minutes</option>
+        <option value="59">59 minutes</option>
+        <option value="60">60 minutes</option>
+      </select>
+  
+      <select aria-label="Hours select">
+        <option disabled selected>Hours</option>
+        <option value="1">1 hour</option>
+        <option value="2">2 hours</option>
+        <option value="3">3 hours</option>
+        <option value="4">4 hours</option>
+        <option value="5">5 hours</option>
+        <option value="6">6 hours</option>
+        <option value="7">7 hours</option>
+        <option value="8">8 hours</option>
+        <option value="9">9 hours</option>
+        <option value="10">10 hours</option>
+        <option value="11">11 hours</option>
+        <option value="12">12 hours</option>
+        <option value="13">13 hours</option>
+        <option value="14">14 hours</option>
+        <option value="15">15 hours</option>
+        <option value="16">16 hours</option>
+        <option value="17">17 hours</option>
+        <option value="18">18 hours</option>
+        <option value="19">19 hours</option>
+        <option value="20">20 hours</option>
+        <option value="21">21 hours</option>
+        <option value="22">22 hours</option>
+        <option value="23">23 hours</option>
+        <option value="24">24 hours</option>
+      </select>
+  
+      <select aria-label="Days select">
+        <option disabled selected>Days</option>
+        <option value="1">1 day</option>
+        <option value="2">2 days</option>
+        <option value="3" selected>3 days</option>
+        <option value="4">4 days</option>
+        <option value="5">5 days</option>
+        <option value="6">6 days</option>
+        <option value="7">7 days</option>
+        <option value="8">8 days</option>
+        <option value="9">9 days</option>
+        <option value="10">10 days</option>
+        <option value="11">11 days</option>
+        <option value="12">12 days</option>
+        <option value="13">13 days</option>
+        <option value="14">14 days</option>
+        <option value="15">15 days</option>
+        <option value="16">16 days</option>
+        <option value="17">17 days</option>
+        <option value="18">18 days</option>
+        <option value="19">19 days</option>
+        <option value="20">20 days</option>
+        <option value="21">21 days</option>
+        <option value="22">22 days</option>
+        <option value="23">23 days</option>
+        <option value="24">24 days</option>
+        <option value="25">25 days</option>
+        <option value="26">26 days</option>
+        <option value="27">27 days</option>
+        <option value="28">28 days</option>
+        <option value="29">29 days</option>
+        <option value="30">30 days</option>
+      </select>
+  
+      <select aria-label="Weeks select">
+        <option disabled selected>Weeks</option>
+        <option value="1">1 week</option>
+        <option value="2">2 weeks</option>
+        <option value="3">3 weeks</option>
+        <option value="4">4 weeks</option>
+        <option value="5">5 weeks</option>
+        <option value="6">6 weeks</option>
+        <option value="7">7 weeks</option>
+      </select>
+    </div>
+  
+    <div class="frequency-selects" aria-label="Duration frequency select">
+      <select aria-label="Persistent select">
+        <option disabled selected>Persistent</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="26">26</option>
+        <option value="27">27</option>
+        <option value="28">28</option>
+        <option value="29">29</option>
+        <option value="30">30</option>
+      </select>
+  
+      <select aria-label="Intermittent select">
+        <option disabled selected>Intermittent</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="26">26</option>
+        <option value="27">27</option>
+        <option value="28">28</option>
+        <option value="29">29</option>
+        <option value="30">30</option>
+      </select>
+  
+      <select aria-label="Episodic select">
+        <option disabled selected>Episodic</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="26">26</option>
+        <option value="27">27</option>
+        <option value="28">28</option>
+        <option value="29">29</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+  </div>
+        <p class="remarks-label">Remarks:</p>
+        <input type="text" value="Episodes of palpitations last 2–5 minutes" aria-label="Duration remarks" />
+      </div>
+  
+      <!-- CHARACTER -->
+      <div class="box" aria-label="Character">
+        <div class="label">CHARACTER</div>
+        <div class="flex-row">
+          <select aria-label="Character 1 select">
+            <option selected>Lightheadedness</option>
+            <option>Throbbing</option>
+            <option>Sharp</option>
+            <option>Dull</option>
+            <option>Aching</option>
+            <option>Burning</option>
+            <option>Nausea</option>
+            <option>Chest tightness</option>
+            <option>Other</option>
+          </select>
+          <select aria-label="Character 2 select">
+            <option selected>Spinning (Vertigo)</option>
+            <option>Throbbing</option>
+            <option>Sharp</option>
+            <option>Dull</option>
+            <option>Aching</option>
+            <option>Burning</option>
+            <option>Nausea</option>
+            <option>Chest tightness</option>
+            <option>Other</option>
+          </select>
+          <select aria-label="Character 3 select">
+            <option selected>Palpitations (Sudden and racing heartbeats)</option>
+            <option>Throbbing</option>
+            <option>Sharp</option>
+            <option>Dull</option>
+            <option>Aching</option>
+            <option>Burning</option>
+            <option>Nausea</option>
+            <option>Chest tightness</option>
+            <option>Other</option>
+          </select>
+          <select aria-label="Character 4 select">
+            <option selected>Blurry vision</option>
+            <option>Throbbing</option>
+            <option>Sharp</option>
+            <option>Dull</option>
+            <option>Aching</option>
+            <option>Burning</option>
+            <option>Nausea</option>
+            <option>Chest tightness</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <p class="remarks-label">Remarks:</p>
+        <input type="text" placeholder="If other, specify..." aria-label="Character remarks" />
+      </div>
+  
+      <!-- AGGRAVATING FACTORS -->
+      <div class="box" aria-label="Aggravating factors">
+        <div class="label">AGGRAVATING FACTORS</div>
+        <div class="flex-row">
+          <select aria-label="Aggravating factor 1 select">
+            <option selected>High sodium diet</option>
+            <option>Smoking</option>
+            <option>Physical activity</option>
+            <option>Emotional stress</option>
+            <option>Specific movements</option>
+            <option>Eating (certain foods, high sodium)</option>
+            <option>Alcohol consumption</option>
+            <option>Medication changes (e.g., missing doses)</option>
+            <option>Obesity and sedentary behavior</option>
+            <option>Lack of sleep</option>
+            <option>Lack of exercise</option>
+            <option>No specific aggravating factors</option>
+          </select>
+          <select aria-label="Aggravating factor 2 select">
+            <option>High sodium diet</option>
+            <option selected>Smoking</option>
+            <option>Physical activity</option>
+            <option>Emotional stress</option>
+            <option>Specific movements</option>
+            <option>Eating (certain foods, high sodium)</option>
+            <option>Alcohol consumption</option>
+            <option>Medication changes (e.g., missing doses)</option>
+            <option>Obesity and sedentary behavior</option>
+            <option>Lack of sleep</option>
+            <option>Lack of exercise</option>
+            <option>No specific aggravating factors</option>
+          </select>
+        </div>
+        <p class="remarks-label">Remarks:</p>
+        <input type="text" value="Smokes 5–10 cigarettes a day" aria-label="Aggravating factors remarks" />
+      </div>
+  
+      <!-- RELIEVING FACTORS -->
+      <div class="box" aria-label="Relieving factors">
+        <div class="label">RELIEVING FACTORS</div>
+        <div class="flex-row">
+          <select aria-label="Relieving factor 1 select">
+            <option selected>Rest</option>
+            <option>Medication</option>
+            <option>Hydration</option>
+            <option>Change of position</option>
+            <option>Sleep</option>
+            <option>Lying down</option>
+            <option>No relieving factors</option>
+            <option>Other</option>
+          </select>
+          <select aria-label="Relieving factor 2 select">
+            <option>Rest</option>
+            <option selected>Medication</option>
+            <option>Hydration</option>
+            <option>Change of position</option>
+            <option>Sleep</option>
+            <option>Lying down</option>
+            <option>No relieving factors</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <p class="remarks-label">Remarks:</p>
+        <input type="text" value="Takes Amlodipine when asymptomatic" aria-label="Relieving factors remarks" />
+      </div>
+  
+      <!-- TIMING -->
+      <div class="box" aria-label="Timing">
+        <div class="label">TIMING</div>
+        <select aria-label="Timing select">
+          <option>Morning</option>
+          <option>Afternoon</option>
+          <option>Evening</option>
+          <option>At night</option>
+          <option>Intermittent throughout the day</option>
+          <option>After meals</option>
+          <option selected>Random (Palpitations occur randomly throughout the day)</option>
+          <option>Consistent</option>
+        </select>
+        <p class="remarks-label">Remarks:</p>
+        <input type="text" value="Palpitation occurs randomly" aria-label="Timing remarks" />
+      </div>
+  
+      <!-- SEVERITY -->
+      <div class="box" aria-label="Severity">
+        <div class="label">SEVERITY</div>
+        <div class="severity-selects">
+          <select aria-label="Severity level select">
+            <option>Mild</option>
+            <option>Moderate</option>
+            <option selected>Severe</option>
+          </select>
+          <select aria-label="Severity impact select">
+            <option selected>Disruptive to daily activities</option>
+            <option>Debilitating</option>
+          </select>
+        </div>
+        <p class="remarks-label">Remarks:</p>
+        <textarea aria-label="Severity remarks">Symptoms such as dizziness and palpitations disrupt daily functioning which is severe enough to prompt ER visit.</textarea>
+      </div>
+    </div>
+
+  </main>
+  <script>
+    window.onload = function () {
+        let username = localStorage.getItem("nurseName");
+
+        if (username) {
+            document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                el.textContent = username;
+            });
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector(".search-box input");
+        const patientCards = document.querySelectorAll(".container-grid1 a");
+
+        // Store original HTML for each card for accurate highlighting
+        patientCards.forEach(card => {
+            card.setAttribute("data-original-html", card.innerHTML);
+        });
+
+        searchInput.addEventListener("input", function () {
+            const searchText = searchInput.value.toLowerCase().trim();
+
+            patientCards.forEach(card => {
+                // Reset to original content first
+                card.innerHTML = card.getAttribute("data-original-html");
+
+                const nameEl = card.querySelector(".name");
+                const numEl = card.querySelector(".patient-number");
+
+                const nameText = nameEl.textContent.toLowerCase();
+                const numText = numEl.textContent.toLowerCase();
+
+                const matches = nameText.includes(searchText) || numText.includes(searchText);
+
+                if (searchText === "") {
+                    card.style.display = "";
+                    return;
+                }
+
+                if (matches) {
+                    card.style.display = "";
+
+                    const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+
+                    highlightText(nameEl, regex);
+                    highlightText(numEl, regex);
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+        function highlightText(element, regex) {
+            element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+        }
+    });
+</script>
+</head>
+<body>
+
+<nav class = "sidebar close">
+    <header>
+      
+        <a href="home.html" style="text-decoration:none">
+            <div class="image-text">
+                <span class="image">
+                    <img src="logo.png" alt="logo">
+                </span>
+
+                <div class="text header-text">
+                    <span class="title">Sterra Medical Center</span>
+                    <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                </div>
+            </div>
+        </a>
+
+    </header>
+    <div class="menu-bar">
+        <div class="menu">
+            <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="Search" placeholder="Search...">
+            </li>
+            <ul class="menu-links">
+                <li class="nav-link">
+                    <a href="db.html">
+                        <i class='bx bxs-dashboard icon'></i>
+                        <span class="text nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <div class="dd">
+                    <li class="nav-link">
+                        <a href="">
+                            <i class='bx bx-folder-open icon'></i>
+                            <span class="text nav-text">Charts</span>
+                        </a>
+                        <div class="dd-content">
+                            <a href="c.html">Patient List</a>
+                            <a href="ap.html">Add a patient</a>
+                        </div>
+                    </li>
+                </div>
+                <li class="nav-link">
+                    <a href="am.html">
+                        <i class='bx bx-calendar icon'></i>
+                        <span class="text nav-text">Appointment</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="f.html">
+                        <i class='bx bx-receipt icon'></i>
+                        <span class="text nav-text">Finances</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bottom-content">
+            <li class="">
+                <a href="login.html">
+                    <i class='bx bx-log-out icon'></i>
+                    <span class="text nav-text">logout</span>
+                </a>
+            </li>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

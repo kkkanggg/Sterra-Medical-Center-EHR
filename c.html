@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equi="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="c.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>Charts</title>
+    <script>
+        window.onload = function () {
+            let username = localStorage.getItem("nurseName");
+            if (username) {
+                document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                    el.textContent = username;
+                });
+            }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-box input");
+            const contentContainer = document.getElementById("searchable-content");
+            const patientCards = document.querySelectorAll(".data-one");
+    
+            // Save the original HTML for resetting highlight
+            const originalHTML = contentContainer.innerHTML;
+    
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase().trim();
+    
+                // Highlight text
+                contentContainer.innerHTML = originalHTML;
+                if (searchText !== "") {
+                    const safeSearchText = searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                    const regex = new RegExp(`(${safeSearchText})`, "gi");
+                    highlightMatches(contentContainer, regex);
+                }
+    
+                // Filter visibility based on name or patient number
+                const updatedCards = document.querySelectorAll(".data-one");
+                updatedCards.forEach(card => {
+                    const name = card.querySelector(".name").textContent.toLowerCase();
+                    const patientNumber = card.querySelector(".patient-number").textContent.toLowerCase();
+    
+                    const matches = name.includes(searchText) || patientNumber.includes(searchText);
+                    card.style.display = matches || searchText === "" ? "block" : "none";
+                });
+            });
+    
+            function highlightMatches(element, regex) {
+                const nodes = Array.from(element.childNodes);
+                nodes.forEach(node => {
+                    if (node.nodeType === 3) {
+                        const replaced = node.nodeValue.replace(regex, '<span class="highlight">$1</span>');
+                        if (replaced !== node.nodeValue) {
+                            const wrapper = document.createElement("span");
+                            wrapper.innerHTML = replaced;
+                            node.replaceWith(wrapper);
+                        }
+                    } else if (node.nodeType === 1) {
+                        highlightMatches(node, regex);
+                    }
+                });
+            }
+        });
+    
+        // filterfeat by conditions (e.g., Cardiovascular, Respiratory, etc.)
+        function filterPatients(condition) {
+            const patients = document.querySelectorAll('.data-one');
+            patients.forEach(patient => {
+                const conditions = patient.dataset.conditions?.split(',') || [];
+                if (conditions.includes(condition)) {
+                    patient.style.display = 'block';
+                } else {
+                    patient.style.display = 'none';
+                }
+            });
+        }
+    
+        // Reset all filters
+        function showAllPatients() {
+            const patients = document.querySelectorAll('.data-one');
+            patients.forEach(patient => {
+                patient.style.display = 'block';
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="section-title">
+        <h1 class="ch">PATIENT LIST</h1>
+            <div class="drop">
+                <span class="infos">
+                    <img src="infologo.png" alt="il">
+                </span>
+                <div class="drop-content">
+                    <button class="c" style="background-color:#c23e3b;" onclick="filterPatients('Blood Disorders')">Blood Disorder</button>
+                    <button class="c" style="background-color:#cf673e;" onclick="filterPatients('Cardiovascular')">Cardiovascular</button>
+                    <button class="c" style="background-color:#3e88cd;" onclick="filterPatients('Respiratory')">Respiratory</button>
+                    <button class="c" style="background-color:#d4b03f;" onclick="filterPatients('Endocrine')">Endocrine</button>
+                    <button class="c" style="background-color:#569f5f;" onclick="filterPatients('Gastrointestinal')">Gastrointestinal</button>
+                    <button class="c" style="background-color:#a175b4;" onclick="filterPatients('Neurological')">Neurological</button>
+                    <button class="c" style="background-color:#a2684e;" onclick="filterPatients('Musculoskeletal')">Musculoskeletal</button>
+                    <button class="c" style="background-color:#3f989d;" onclick="filterPatients('Renal/Urological')">Renal/Urological</button>
+                    <button class="c" style="background-color:#c476ac;" onclick="filterPatients('Infectious Diseases')">Infectious Diseases</button>
+                    <button class="c" style="background-color:#898888;" onclick="filterPatients('Psychiatric/Mental Health')">Psychiatric/Mental Health</button>
+                    <button class="c" style="background-color:#d8aa98;" onclick="filterPatients('Dermatology')">Dermatology</button>
+                    <button class="c1" style="background-color:#2c3030;" onclick="filterPatients('Oncology')">Oncology</button>
+                    <button class="c" style="background-color:#bfaac6;" onclick="filterPatients('Obstetrics & Gynecology')">Obstetrics & Gynecology</button>
+                    <button class="c" style="background-color:#80c3d6;" onclick="filterPatients('Pediatrics')">Pediatrics</button>
+                    <button class="c" style="background-color:#b4b4b4;" onclick="filterPatients('Geriatrics')">Geriatrics</button>
+                    <button class="c2" style="background-color:rgb(255, 255, 255);" onclick="showAllPatients()">Show All Patients</button>
+                </div>
+            </div>
+    </div>
+    <nav class = "sidebar close">
+        <header>
+            <a href="home.html" style="text-decoration:none">
+                <div class="image-text">
+                    <span class="image">
+                        <img src="logo.png" alt="logo">
+                    </span>
+                    <div class="text header-text">
+                        <span class="title">Sterra Medical Center</span>
+                        <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                    </div>
+                </div>
+            </a>
+
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                        <i class='bx bx-search icon'></i>
+                        <input type="Search" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="db.html">
+                            <i class='bx bxs-dashboard icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <div class="dd">
+                        <li class="nav-link">
+                            <a href="">
+                                <i class='bx bx-folder-open icon'></i>
+                                <span class="text nav-text">Charts</span>
+                            </a>
+                            <div class="dd-content">
+                                <a href="c.html">Patient List</a>
+                                <a href="ap.html">Add a patient</a>
+                            </div>
+                        </li>
+                    </div>
+                    <li class="nav-link">
+                        <a href="am.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="f.html">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Finances</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="login.html">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="searchable-content">
+            <div class="data-one" data-conditions="Respiratory,Cardiovascular">
+                <div class="image-icon">
+                    <span class="image1">
+                        <img src="p1.png" alt="p1">
+                    </span>
+                    
+                    <div class="data1">
+                        <div class="drop-info">
+                            <span class="name">00104092025</span>
+                            <div class="p1-drop-info">
+                                <div class="format">
+                                    <a href="cdp.html">
+                                        <p class="c">Demongraphic Profile</p>
+                                    </a>
+                                    <a href="cmh.html">
+                                        <p class="c">Medical History</p>
+                                    </a>
+                                    <a href="cesi.html">
+                                        <p class="c">ESI</p>
+                                    </a>
+                                    <a href="cprf.html">
+                                        <p class="c">Patient Referral Form</p>
+                                    </a>
+                                    <a href="cia.html">
+                                        <p class="c">Initial Assessment</p>
+                                    </a>
+                                    <a href="cvsm.html">
+                                        <p class="c">Vital Signs Monitoring</p>
+                                    </a>
+                                    <a href="cir.html">
+                                        <p class="c">Immunization</p>
+                                    </a>
+                                    <a href="chh.html">
+                                        <p class="c">Health History</p>
+                                    </a>
+                                    <a href="chhpa.html">
+                                        <p class="c">Physical Assessment</p>
+                                    </a>
+                                    <a href="cdo.html">
+                                        <p class="c">Doctor's Order</p>
+                                    </a>
+                                    <a href="cma.html">
+                                        <p class="c">Medications and Allergies</p>
+                                    </a>
+                                    <a href="cio.html">
+                                        <p class="c">Intake and Output</p>
+                                    </a>
+                                    <a href="clr.html">
+                                        <p class="c">Laboratory Results</p>
+                                    </a>
+                                    <a href="ccdss.html">
+                                        <p class="c">CDSS</p>
+                                    </a>
+                                    <a href="ccp.html">
+                                        <p class="c">Care Plan</p>
+                                    </a>
+                                    <a href="cdisP.html">
+                                        <p class="c">Discharge PLan</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                           <div class="characteristics">
+                              <div class="ctr">
+                                <span class="dfntn" style="background-color:#3e88cd;">Respiratory</span>
+                              </div>
+                              <div class="ctr">
+                                <span class="dfntn" style="background-color: #cf673e;">Cardiovascular</span>
+                              </div>
+                           </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-one" data-conditions="Respiratory,Neurological">
+                <div class="image-icon">
+                    <span class="image1">
+                        <img src="p2.png" alt="p1">
+                    </span>
+                    
+                    <div class="data1">
+                        <div class="drop-info">
+                            <span class="name" data-conditions="Respiratory,Neurological">00204092025</span>
+                            <div class="p1-drop-info">
+                                <div class="format">
+                                    <a href="">
+                                        <p class="c">Demongraphic Profile</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Medical History</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">ESI</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Initial Assessment</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Vital Signs Monitoring</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Immunization</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Health History</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Physical Assessment</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Medications and Allergies</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Intake and Output</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Laboratory Results</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">CDSS</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Care Plan</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Nurse' Notes</p>
+                                    </a>
+                                    <a href="">
+                                        <p class="c">Doctor's Order</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                          <div class="characteristics">
+                            <div class="ctr">
+                                <span class="dfntn" style="background-color:#3e88cd;">Respiratory</span>
+                              </div>
+                            <div class="ctr">
+                                <span class="dfntn" style="background-color:#a175b4;">Neurological</span>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+          </div>
+
+          <div class="data-one" data-conditions="Gastrointestinal,Blood Disorders">
+            <div class="image-icon">
+                <span class="image1">
+                    <img src="p3.png" alt="p3">
+                </span>
+                
+                <div class="data1">
+                    <div class="drop-info">
+                        <span class="name">00304092025</span>
+                        <div class="p1-drop-info">
+                            <div class="format">
+                                <a href="">
+                                    <p class="c">Demongraphic Profile</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Medical History</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">ESI</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Initial Assessment</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Vital Signs Monitoring</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Immunization</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Health History</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Physical Assessment</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Medications and Allergies</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Intake and Output</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Laboratory Results</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">CDSS</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Care Plan</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Nurse' Notes</p>
+                                </a>
+                                <a href="">
+                                    <p class="c">Doctor's Order</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                         <div class="characteristics">
+                             <div class="ctr">
+                                <span class="dfntn" style="background-color:#569f5f;">Gastrointestinal</span>
+                             </div>
+                             <div class="ctr">
+                                <span class="dfntn" style="background-color:#c23e3b;">Blood Disorders</span>
+                             </div>
+                         </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

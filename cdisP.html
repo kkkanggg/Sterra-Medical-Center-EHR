@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="cdisp.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>Discharge Plan</title>
+    <script>
+        window.onload = function () {
+            let username = localStorage.getItem("nurseName");
+    
+            if (username) {
+                document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                    el.textContent = username;
+                });
+            }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-box input");
+            const patientCards = document.querySelectorAll(".container-grid1 a");
+    
+            
+            patientCards.forEach(card => {
+                card.setAttribute("data-original-html", card.innerHTML);
+            });
+    
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase().trim();
+    
+                patientCards.forEach(card => {
+                    
+                    card.innerHTML = card.getAttribute("data-original-html");
+    
+                    const nameEl = card.querySelector(".name");
+                    const numEl = card.querySelector(".patient-number");
+    
+                    const nameText = nameEl.textContent.toLowerCase();
+                    const numText = numEl.textContent.toLowerCase();
+    
+                    const matches = nameText.includes(searchText) || numText.includes(searchText);
+    
+                    if (searchText === "") {
+                        card.style.display = "";
+                        return;
+                    }
+    
+                    if (matches) {
+                        card.style.display = "";
+    
+                        const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+    
+                        highlightText(nameEl, regex);
+                        highlightText(numEl, regex);
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+    
+            function highlightText(element, regex) {
+                element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="section-title">
+        <div class="back-btn">
+            <a href="ccp.html">
+                <img src="las.png" alt="las">
+            </a>
+        </div>
+        <h2 style="font-size: 30px;">DISCHARGE PLAN</h2>
+        <div class="forward-btn">
+            <a href="c.html">
+                <img src="ras.png" alt="ras">
+            </a>
+        </div>
+        <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+    </div>
+    <nav class = "sidebar close">
+        <header>
+            <a href="home.html" style="text-decoration:none">
+                <div class="image-text">
+                    <span class="image">
+                        <img src="logo.png" alt="logo">
+                    </span>
+    
+                    <div class="text header-text">
+                        <span class="title">Sterra Medical Center</span>
+                        <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                    </div>
+                </div>
+            </a>
+
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                        <i class='bx bx-search icon'></i>
+                        <input type="Search" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="db.html">
+                            <i class='bx bxs-dashboard icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <div class="dd">
+                        <li class="nav-link">
+                            <a href="">
+                                <i class='bx bx-folder-open icon'></i>
+                                <span class="text nav-text">Charts</span>
+                            </a>
+                            <div class="dd-content">
+                                <a href="c.html">Patient List</a>
+                                <a href="ap.html">Add a patient</a>
+                            </div>
+                        </li>
+                    </div>
+                    <li class="nav-link">
+                        <a href="am.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="f.html">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Finances</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="login.html">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="searchable-content">
+
+        <div class="discharge-container">
+            <h1 class="discharge-title">EMERGENCY ROOM DISCHARGE INSTRUCTIONS</h1>
+            
+            <div class="discharge-section">
+                <h2>Patient Information</h2>
+                <div class="discharge-content">
+                    <div class="info-row">
+                        <div class="info-item"><strong>Name:</strong> MAGSAYSAY, Theodore P.</div>
+                        <div class="info-item"><strong>Age:</strong> 24</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-item"><strong>Date of Birth:</strong> 09-26-2000</div>
+                        <div class="info-item"><strong>Contact Number:</strong> 09000000000</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="discharge-section">
+                <h2>Visit Details</h2>
+                <div class="discharge-content">
+                    <div class="info-row">
+                        <div class="info-item"><strong>Date of Admission/Visit:</strong> 04-04-2025</div>
+                        <div class="info-item"><strong>Discharge of Date:</strong></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-item"><strong>Attending Physician:</strong></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-item"><strong>Primary Complaint:</strong> Dizziness and Palpitations</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-item"><strong>Working Diagnosis:</strong> Atrial Fibrillation, Hypertension</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-item"><strong>Final Diagnosis:</strong> Hypertension, Hyperlipidemia, Atrial Fibrillation, Early Stage Hypertensive Nephropathy</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="discharge-section">
+                <h2>Assessment and Treatment Given</h2>
+                <div class="discharge-content">
+                    <div class="info-row">
+                        <div class="info-item"><strong>Brief Summary of Findings:</strong> Patient presented with dizziness, lightheadedness, palpitations.</div>
+                    </div>
+                    
+                    <div class="info-row procedures">
+                        <div class="info-item"><strong>Procedures done:</strong></div>
+                    </div>
+                    <div class="procedure-checkboxes">
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> IV Line</div>
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> Blood Work</div>
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> ECG</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> X-ray</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Wound Dressing</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Nebulization</div>
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> Others: Cardiac Monitoring</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-item"><strong>Medications administered:</strong> Labetalol 20 mg IV, Apixaban 5 mg PO, others as per treatment protocol</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-item"><strong>Working Diagnosis:</strong> Atrial Fibrillation, Hypertension</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-item"><strong>Response to treatment:</strong> Stabilized but requires monitoring and outpatient management</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="discharge-section">
+                <h2>Medications to Take at Home</h2>
+                <div class="discharge-content">
+                    <table class="medications-table">
+                        <thead>
+                            <tr>
+                                <th>Medication Name</th>
+                                <th>Dose</th>
+                                <th>Frequency</th>
+                                <th>Duration</th>
+                                <th>Special Instructions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Lisinopril</td>
+                                <td>10 mg</td>
+                                <td>Once daily</td>
+                                <td>Until next review</td>
+                                <td>Renal protection</td>
+                            </tr>
+                            <tr>
+                                <td>Amlodipine</td>
+                                <td>5 mg</td>
+                                <td>Once daily</td>
+                                <td>Until next review</td>
+                                <td>BP control</td>
+                            </tr>
+                            <tr>
+                                <td>Atorvastatin</td>
+                                <td>40 mg</td>
+                                <td>Bedtime</td>
+                                <td>Until next review</td>
+                                <td>Lipid management</td>
+                            </tr>
+                            <tr>
+                                <td>Apixaban</td>
+                                <td>5 mg</td>
+                                <td>Twice daily</td>
+                                <td>Until next review</td>
+                                <td>Stroke prevention</td>
+                            </tr>
+                            <tr>
+                                <td>Metoprolol Succinate</td>
+                                <td>50 mg</td>
+                                <td>Once daily</td>
+                                <td>Until next review</td>
+                                <td>Rate control</td>
+                            </tr>
+                            <tr>
+                                <td>Aspirin</td>
+                                <td>81 mg</td>
+                                <td>Once daily</td>
+                                <td>Until next review</td>
+                                <td>Cardioprotection</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="discharge-section">
+                <h2>Discharge Instructions</h2>
+                <div class="discharge-content">
+                    <div class="info-row">
+                        <div class="info-item"><strong>Diet:</strong></div>
+                    </div>
+                    <div class="diet-checkboxes">
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Regular</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Soft</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> NPO</div>
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> Others: Low-sodium, heart-healthy diet. Avoid fast food and salty snacks.</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-item"><strong>Activity:</strong></div>
+                    </div>
+                    <div class="activity-checkboxes">
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Bed rest</div>
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> Light activity</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Resume normal activity</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-item"><strong>Remarks:</strong> avoid strenuous exercises until cleared by physician.</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-item"><strong>Wound care instructions:</strong> N/A</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-item"><strong>Special care instructions:</strong> Monitor BP regularly. Report any recurrence of dizziness or palpitations</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="discharge-section">
+                <h2>Follow-Up Care</h2>
+                <div class="discharge-content">
+                    <div class="info-row">
+                        <div class="info-item"><strong>Clinic/Doctor:</strong> Dr. De Guzman</div>
+                        <div class="info-item"><strong>Date/Time:</strong> 04/28/2025</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-item"><strong>Referral to:</strong> Cardiology and Nephrology</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-item"><strong>Reason for Referral:</strong> Atrial fibrillation management and hypertensive nephropathy follow-up</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="discharge-section">
+                <h2>Warning Signs / When to Return to ER</h2>
+                <div class="discharge-content">
+                    <div class="warning-checkboxes">
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Chest pain</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Severe dizziness</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Fainting</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> High fever</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Shortness of breath</div>
+                        <div class="checkbox-item"><input type="checkbox" class="checkbox"> Palpitations</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="discharge-section">
+                <h2>Patient Education and Counseling</h2>
+                <div class="discharge-content">
+                    <div class="education-checkboxes">
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> Condition explained</div>
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> Medications explained</div>
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> Home care instructions explained</div>
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> Patient verbalized understanding</div>
+                        <div class="checkbox-item"><input type="checkbox" checked class="checkbox"> Written instructions provided</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="discharge-section">
+                <h2>Acknowledgment</h2>
+                <div class="discharge-content">
+                    <p class="acknowledgment-text">
+                        I acknowledge that the discharge instructions and medications were explained clearly to me and I understand how to manage my condition at home.
+                    </p>
+                    
+                    <div class="signature-container">
+                        <div class="signature-line">
+                            <div class="signature-label">Patient/Guardian Signature:</div>
+                            <div class="signature-field">_____________________</div>
+                            <div class="signature-label">Date:</div>
+                            <div class="signature-field-date">_________</div>
+                        </div>
+                        
+                        <div class="signature-line">
+                            <div class="signature-label">Nurse/Physician Signature:</div>
+                            <div class="signature-field">_____________________</div>
+                            <div class="signature-label">Date:</div>
+                            <div type="text" class="signature-field-date">_________</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

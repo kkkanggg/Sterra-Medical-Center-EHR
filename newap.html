@@ -1,0 +1,575 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="db.css">
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+<title>Form</title>
+<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+  * {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --body-color: #E4E9f7;
+    --sidebar-color: #FFF;
+    --primary-color: #695CFE;
+    --primary-color-light: #F6F5FF;
+    --toggle-color: #DDD;
+    --text-color: #707070;
+    --base-color: #205781;
+    --dash-color: #f7f6f2;
+
+    --tran-02: all 0.2s ease;
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.4s ease;
+    --tran-05: all 0.5s ease;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Prevent page scroll */
+  }
+
+  body {
+    display: flex;
+    background: var(--base-color);
+    justify-content: center;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .dashboard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin-left: 280px;  /* Adjusted for new width */
+    margin-top: 70px;    /* Avoids overlapping the header */
+    width: calc(100% - 280px);
+    height: 940px;
+    max-width: 1950px;
+    box-sizing: border-box;
+    background: var(--dash-color);
+    border-radius: 20px;
+    z-index: 1;
+    overflow-y: auto; /* Scroll inside dashboard only */
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+  }
+
+  .top-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .top-section {
+      flex-direction: row;
+      align-items: stretch; /* stretch children to equal height */
+    }
+  }
+
+  .personal-details {
+    background-color: #dbe1e3;
+    border-radius: 16px;
+    padding: 16px;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .section-header {
+    background-color: #cfd8db;
+    color: var(--base-color);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    user-select: none;
+  }
+
+  .personal-details .section-header {
+    border-radius: 16px 16px 0 0;
+  }
+
+  .personal-text {
+    font-size: 13px;
+    color: #8a8a8a;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    overflow-y: auto;
+  }
+
+  .personal-text label {
+    font-weight: 600;
+    color: #8a8a8a;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .personal-text input[type="text"],
+  .personal-text input[type="date"] {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    color: black;
+  }
+
+  .civil-status,
+  .citizenship {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--base-color);
+    align-items: center;
+    overflow-x: auto;
+  }
+
+  .civil-status span.label,
+  .citizenship span.label {
+    min-width: 110px;
+    font-weight: 600;
+    color: #8a8a8a;
+    flex-shrink: 0;
+  }
+
+  .civil-status label,
+  .citizenship label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .civil-status label span,
+  .citizenship label span {
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .photo-section {
+    width: 288px;
+    background-color: #dbe1e3;
+    border-radius: 16px;
+    padding: 16px 16px 8px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 768px) {
+    .photo-section {
+      height: auto;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      text-align: center;
+    }
+  }
+
+  .photo-section img {
+    width: 230px;
+    height: 230px;
+    object-fit: cover;
+    border-radius: 0;
+    background: white;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .upload-button {
+    font-weight: 600;
+    font-size: 14px;
+    color: #a3a3a3;
+    user-select: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+    margin-top: 8px;
+    align-self: center;
+  }
+
+  .upload-button:hover,
+  .upload-button:focus {
+    background-color: #cfd8db;
+    outline: none;
+  }
+
+  .address-header,
+  .insurance-header {
+    background-color: #cfd8db;
+    color: var(--base-color);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 16px 16px 0 0;
+    user-select: none;
+  }
+
+  .address-section {
+    background-color: #dbe1e3;
+    border-radius: 0 0 16px 16px;
+    padding: 16px;
+    font-size: 13px;
+    color: #8a8a8a;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-sizing: border-box;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .address-section strong {
+    font-weight: 600;
+    color: #8a8a8a;
+  }
+
+  .address-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 12px;
+  }
+
+  .address-grid input {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    color: black;
+  }
+
+  .mailing-address {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mailing-address strong {
+    font-weight: 600;
+    color: #8a8a8a;
+  }
+
+  .mailing-address label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    color: black;
+  }
+
+  .insurance-section {
+    background-color: #dbe1e3;
+    border-radius: 16px 16px 16px 16px;
+    padding: 24px;
+    height: 199px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .insurance-section h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--base-color);
+    background-color: #cfd8db;
+    padding: 4px 12px;
+    border-radius: 16px 16px 0 0;
+    user-select: none;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .form-group label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #8a8a8a;
+  }
+
+  .form-group input {
+    padding: 6px 8px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+  }
+
+  .form-group input::placeholder {
+    color: #b7b7b7;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+</style>
+</head>
+<body>
+    <body>
+        <h1 class="db">NEW PATIENT</h1>
+  <div class="dashboard" role="main">
+    <div class="top-section">
+      <section class="personal-details" aria-labelledby="personal-details-header">
+        <h2 id="personal-details-header" class="section-header">I. PERSONAL DETAILS</h2>
+        <div class="personal-text">
+          <label for="patient-name">PATIENT NAME:</label>
+          <input id="patient-name" type="text" placeholder="LAST NAME, FIRST NAME, NAME EXTENSION, MIDDLE NAME" />
+          <label for="mother-maiden">MOTHER’S MAIDEN NAME:</label>
+          <input id="mother-maiden" type="text" placeholder="type here" />
+          <label for="spouse">SPOUSE (IF MARRIED):</label>
+          <input id="spouse" type="text" placeholder="type here" />
+          <label for="dob">DATE OF BIRTH:</label>
+          <input id="dob" type="text" placeholder="mm, dd, yyy" />
+          <div class="civil-status" tabindex="0" aria-label="Civil Status options">
+            <span class="label">CIVIL STATUS:</span>
+            <label><input type="radio" name="civil-status" value="Single" /> <span>Single</span></label>
+            <label><input type="radio" name="civil-status" value="Married" /> <span>Married</span></label>
+            <label><input type="radio" name="civil-status" value="Annulled" /> <span style="font-style: italic;">Annulled</span></label>
+            <label><input type="radio" name="civil-status" value="Widow/er" /> <span style="font-style: italic;">Widow/er</span></label>
+            <label><input type="radio" name="civil-status" value="Legally Separated" /> <span style="font-style: italic;">Legally Separated</span></label>
+          </div>
+          <div class="citizenship" tabindex="0" aria-label="Citizenship options">
+            <span class="label">CITIZENSHIP:</span>
+            <label><input type="radio" name="citizenship" value="Filipino" /> <span style="font-style: italic;">Filipino</span></label>
+            <label><input type="radio" name="citizenship" value="Foreign National" /> <span style="font-style: italic;">Foreign National</span></label>
+            <label><input type="radio" name="citizenship" value="Dual Citizen" /> <span style="font-style: italic;">Dual Citizen</span></label>
+          </div>
+        </div>
+      </section>
+      <aside class="photo-section" aria-label="User picture placeholder">
+        <img id="patient-photo" src="apatient.png" alt="" width="140" height="140" />
+        <label for="upload-photo" class="upload-button" tabindex="0" role="button" aria-label="Upload photo button">insert picture</label>
+        <input type="file" id="upload-photo" accept="image/*" />
+      </aside>
+    </div>
+    <section aria-labelledby="address-header">
+      <h2 id="address-header" class="address-header">II. ADDRESS AND CONTACT NUMBERS</h2>
+      <div class="address-section">
+        <div><strong>PERMANENT HOME ADDRESS</strong></div>
+        <div class="address-grid" aria-label="Permanent home address inputs">
+          <input type="text" placeholder="Unit/Room/Flr #" />
+          <input type="text" placeholder="Building Name" />
+          <input type="text" placeholder="Lot/Block/Phase/House Number" />
+          <input type="text" placeholder="St. Name" />
+        </div>
+        <div class="address-grid" aria-label="Permanent home address inputs">
+          <input type="text" placeholder="Subdivision" />
+          <input type="text" placeholder="Barangay" />
+          <input type="text" placeholder="ZIP Code" />
+          <input type="text" placeholder="Municipality/ City" />
+        </div>
+        <div class="address-grid" aria-label="Permanent home address inputs">
+          <input type="text" placeholder="Province/State/Country (if abroad)" />
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div class="mailing-address">
+          <strong>MAILING ADDRESS</strong>
+          <label><input type="checkbox" /> SAME AS ABOVE</label>
+        </div>
+      </div>
+    </section>
+    <section aria-labelledby="insurance-header" class="insurance-section">
+      <h2 id="insurance-header" class="insurance-header">III. INSURANCE INFORMATION</h2>
+      <div class="form-group">
+        <label for="insurance-provider">INSURANCE PROVIDER:</label>
+        <input id="insurance-provider" type="text" placeholder="Enter insurance provider" />
+      </div>
+      <div class="form-group">
+        <label for="account-number">ACCOUNT NUMBER:</label>
+        <input id="account-number" type="text" placeholder="Enter account number" />
+      </div>
+    </section>
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("#dob", {
+    dateFormat: "m, d, Y",
+    allowInput: true
+  });
+
+  const uploadInput = document.getElementById('upload-photo');
+  const patientPhoto = document.getElementById('patient-photo');
+
+  uploadInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        patientPhoto.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+<script>
+    window.onload = function () {
+        let username = localStorage.getItem("nurseName");
+
+        if (username) {
+            document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                el.textContent = username;
+            });
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector(".search-box input");
+        const patientCards = document.querySelectorAll(".container-grid1 a");
+
+        // Store original HTML for each card for accurate highlighting
+        patientCards.forEach(card => {
+            card.setAttribute("data-original-html", card.innerHTML);
+        });
+
+        searchInput.addEventListener("input", function () {
+            const searchText = searchInput.value.toLowerCase().trim();
+
+            patientCards.forEach(card => {
+                // Reset to original content first
+                card.innerHTML = card.getAttribute("data-original-html");
+
+                const nameEl = card.querySelector(".name");
+                const numEl = card.querySelector(".patient-number");
+
+                const nameText = nameEl.textContent.toLowerCase();
+                const numText = numEl.textContent.toLowerCase();
+
+                const matches = nameText.includes(searchText) || numText.includes(searchText);
+
+                if (searchText === "") {
+                    card.style.display = "";
+                    return;
+                }
+
+                if (matches) {
+                    card.style.display = "";
+
+                    const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+
+                    highlightText(nameEl, regex);
+                    highlightText(numEl, regex);
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+        function highlightText(element, regex) {
+            element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+        }
+    });
+</script>
+</head>
+<body>
+
+<nav class = "sidebar close">
+    <header>
+        <a href="home.html" style="text-decoration:none">
+            <div class="image-text">
+                <span class="image">
+                    <img src="logo.png" alt="logo">
+                </span>
+
+                <div class="text header-text">
+                    <span class="title">EHR</span>
+                    <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                </div>
+            </div>
+        </a>
+
+    </header>
+    <div class="menu-bar">
+        <div class="menu">
+            <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="Search" placeholder="Search...">
+            </li>
+            <ul class="menu-links">
+                <li class="nav-link">
+                    <a href="db.html">
+                        <i class='bx bxs-dashboard icon'></i>
+                        <span class="text nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <div class="dd">
+                    <li class="nav-link">
+                        <a href="">
+                            <i class='bx bx-folder-open icon'></i>
+                            <span class="text nav-text">Charts</span>
+                        </a>
+                        <div class="dd-content">
+                            <a href="c.html">Patient List</a>
+                            <a href="ap.html">Add a patient</a>
+                        </div>
+                    </li>
+                </div>
+                <li class="nav-link">
+                    <a href="am.html">
+                        <i class='bx bx-calendar icon'></i>
+                        <span class="text nav-text">Appointment</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="f.html">
+                        <i class='bx bx-receipt icon'></i>
+                        <span class="text nav-text">Finances</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bottom-content">
+            <li class="">
+                <a href="login.html">
+                    <i class='bx bx-log-out icon'></i>
+                    <span class="text nav-text">logout</span>
+                </a>
+            </li>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

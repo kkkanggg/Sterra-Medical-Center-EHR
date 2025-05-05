@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="cprf.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>PATIENT REFERRAL FORM</title>
+    <script>
+        window.onload = function () {
+            let username = localStorage.getItem("nurseName");
+    
+            if (username) {
+                document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                    el.textContent = username;
+                });
+            }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-box input");
+            const patientCards = document.querySelectorAll(".container-grid1 a");
+    
+            // Store original HTML for each card for accurate highlighting
+            patientCards.forEach(card => {
+                card.setAttribute("data-original-html", card.innerHTML);
+            });
+    
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase().trim();
+    
+                patientCards.forEach(card => {
+                    // Reset to original content first
+                    card.innerHTML = card.getAttribute("data-original-html");
+    
+                    const nameEl = card.querySelector(".name");
+                    const numEl = card.querySelector(".patient-number");
+    
+                    const nameText = nameEl.textContent.toLowerCase();
+                    const numText = numEl.textContent.toLowerCase();
+    
+                    const matches = nameText.includes(searchText) || numText.includes(searchText);
+    
+                    if (searchText === "") {
+                        card.style.display = "";
+                        return;
+                    }
+    
+                    if (matches) {
+                        card.style.display = "";
+    
+                        const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+    
+                        highlightText(nameEl, regex);
+                        highlightText(numEl, regex);
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+    
+            function highlightText(element, regex) {
+                element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="section-title">
+        <div class="back-btn">
+            <a href="cesi.html">
+                <img src="las.png" alt="las">
+            </a>
+        </div>
+        <h2 style="font-size: 30px;">PATIENT REFERRAL FORM</h2>
+        <div class="forward-btn">
+            <a href="cia.html">
+                <img src="ras.png" alt="ras">
+            </a>
+        </div>
+        <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+    </div>
+    <nav class = "sidebar close">
+        <header>
+            <a href="home.html" style="text-decoration:none">
+                <div class="image-text">
+                    <span class="image">
+                        <img src="logo.png" alt="logo">
+                    </span>
+    
+                    <div class="text header-text">
+                        <span class="title">Sterra Medical Center</span>
+                        <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                    </div>
+                </div>
+            </a>
+
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                        <i class='bx bx-search icon'></i>
+                        <input type="Search" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="db.html">
+                            <i class='bx bxs-dashboard icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <div class="dd">
+                        <li class="nav-link">
+                            <a href="">
+                                <i class='bx bx-folder-open icon'></i>
+                                <span class="text nav-text">Charts</span>
+                            </a>
+                            <div class="dd-content">
+                                <a href="c.html">Patient List</a>
+                                <a href="ap.html">Add a patient</a>
+                            </div>
+                        </li>
+                    </div>
+                    <li class="nav-link">
+                        <a href="am.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="f.html">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Finances</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="login.html">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="searchable-content">
+
+        <div class="referral-form">
+
+            <div class="pit-cont2">
+
+                <div class="form-section">
+                    <div class="form-row">
+                        <label>Date:</label>
+                        <div class="date-inputs">
+                            <input type="text" placeholder="/" class="date-input" />
+                            <span>/</span>
+                            <input type="text" placeholder="/" class="date-input" />
+                            <span>/</span>
+                            <input type="text" placeholder="/" class="date-input" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>Referral to:</label>
+                        <select class="full-width" style="padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                            <option value="" disabled selected>Name of facility</option>
+                            <option value="Cardiology">Cardiology</option>
+                            <option value="Neurology">Neurology</option>
+                            <option value="Pulmonology">Pulmonology</option>
+                            <option value="Gastroenterology">Gastroenterology</option>
+                            <option value="Nephrology">Nephrology</option>
+                            <option value="Rheumatology">Rheumatology</option>
+                            <option value="Endocrinology">Endocrinology</option>
+                            <option value="Oncology">Oncology</option>
+                        </select>
+                    </div>
+                    <div class="form-row two-col">
+                        <div class="col">
+                            <label>Focal Point:</label>
+                            <input type="text" placeholder="Full Name" />
+                        </div>
+                        <div class="col">
+                            <label>Phone number:</label>
+                            <input type="text" placeholder="Contact number" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-row two-col">
+                        <div class="col">
+                            <label>Location:</label>
+                            <input type="text" placeholder="Address" />
+                        </div>
+                        <div class="col">
+                            <label>Email:</label>
+                            <input type="email" placeholder="Email address" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="form-row">
+                        <label>Referring from:</label>
+                        <select class="full-width" style="padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                            <option value="" disabled selected>Name of facility</option>
+                            <option value="Outpatient">Outpatient</option>
+                            <option value="Inpatient">Inpatient</option>
+                            <option value="Consultation">Consultation</option>
+                            <option value="Emergency/Urgent">Emergency/Urgent</option>
+                            <option value="Diagnostic Test">Diagnostic Test</option>
+                            <option value="Telemedicine">Telemedicine</option>
+                            <option value="Follow-up">Follow-up</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row two-col">
+                        <div class="col">
+                            <label>Focal Point:</label>
+                            <input type="text" placeholder="Full Name" />
+                        </div>
+                        <div class="col">
+                            <label>Phone number:</label>
+                            <input type="text" placeholder="Contact number" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-row two-col">
+                        <div class="col">
+                            <label>Location:</label>
+                            <input type="text" placeholder="Address" />
+                        </div>
+                        <div class="col">
+                            <label>Email:</label>
+                            <input type="email" placeholder="Email address" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pit-cont">
+
+                <div class="section-header">
+                    <h3>Patient Information</h3>
+                </div>
+
+                <div class="patient-info-table">
+                    <table>
+                        <tr>
+                            <td><label>Full Name:</label></td>
+                            <td><input type="text" placeholder="" /></td>
+                            <td><label>Phone number:</label></td>
+                            <td><input type="text" placeholder="" /></td>
+                        </tr>
+                        <tr>
+                            <td><label>Date of Birth:</label></td>
+                            <td><input type="text" placeholder="dd/mm/yy" /></td>
+                            <td><label>Gender:</label></td>
+                            <td><input type="text" placeholder="" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"><label>Address of discharge information (if known):</label></td>
+                            <td colspan="3"><input type="text" placeholder="" class="full-width" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><label>Accompanied by care provider:</label></td>
+                            <td colspan="2">
+                                <div class="checkbox-group">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" name="accompanied" value="yes">
+                                        <span class="checkbox-text">Yes</span>
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" name="accompanied" value="no">
+                                        <span class="checkbox-text">No</span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="form-section">
+                    <div class="form-row">
+                        <label>Primary Diagnosis</label>
+                        <input type="text" placeholder="Type here" class="full-width" />
+                    </div>
+                    <div class="form-row">
+                        <input type="text" placeholder="Type here" class="full-width" />
+                    </div>
+                    <div class="form-row">
+                        <input type="text" placeholder="Type here" class="full-width" />
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>Other Diagnosis</label>
+                        <input type="text" placeholder="Type here" class="full-width" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pit-cont">
+
+                <div class="section-header">
+                    <h3>Treatments Initiated</h3>
+                </div>
+                
+                <div class="form-section">
+                    <div class="form-row2 treatment-row">
+                        <input type="text" placeholder="Type here" class="treatment-input" />
+                        <div class="checkbox-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="treatment1-status" value="ongoing">
+                                <span class="checkbox-text">Ongoing</span>
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="treatment1-status" value="done">
+                                <span class="checkbox-text">Done</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row2 treatment-row">
+                        <input type="text" placeholder="Type here" class="treatment-input" />
+                        <div class="checkbox-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="treatment2-status" value="ongoing">
+                                <span class="checkbox-text">Ongoing</span>
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="treatment2-status" value="done">
+                                <span class="checkbox-text">Done</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row2 treatment-row">
+                        <input type="text" placeholder="Type here" class="treatment-input" />
+                        <div class="checkbox-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="treatment3-status" value="ongoing">
+                                <span class="checkbox-text">Ongoing</span>
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="treatment3-status" value="done">
+                                <span class="checkbox-text">Done</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row2 treatment-row">
+                        <input type="text" placeholder="Type here" class="treatment-input" />
+                        <div class="checkbox-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="treatment4-status" value="ongoing">
+                                <span class="checkbox-text">Ongoing</span>
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="treatment4-status" value="done">
+                                <span class="checkbox-text">Done</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

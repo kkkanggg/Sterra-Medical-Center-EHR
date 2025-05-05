@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="cdo.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>Doctor's Order</title>
+    <script>
+        window.onload = function () {
+            let username = localStorage.getItem("nurseName");
+    
+            if (username) {
+                document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                    el.textContent = username;
+                });
+            }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-box input");
+            const patientCards = document.querySelectorAll(".container-grid1 a");
+    
+            // Store original HTML for each card for accurate highlighting
+            patientCards.forEach(card => {
+                card.setAttribute("data-original-html", card.innerHTML);
+            });
+    
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase().trim();
+    
+                patientCards.forEach(card => {
+                    // Reset to original content first
+                    card.innerHTML = card.getAttribute("data-original-html");
+    
+                    const nameEl = card.querySelector(".name");
+                    const numEl = card.querySelector(".patient-number");
+    
+                    const nameText = nameEl.textContent.toLowerCase();
+                    const numText = numEl.textContent.toLowerCase();
+    
+                    const matches = nameText.includes(searchText) || numText.includes(searchText);
+    
+                    if (searchText === "") {
+                        card.style.display = "";
+                        return;
+                    }
+    
+                    if (matches) {
+                        card.style.display = "";
+    
+                        const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+    
+                        highlightText(nameEl, regex);
+                        highlightText(numEl, regex);
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+    
+            function highlightText(element, regex) {
+                element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+            }
+        });
+
+        // new upd
+        document.addEventListener("DOMContentLoaded", function() {
+        
+        document.querySelectorAll('.doctor-order-details').forEach(detail => {
+            detail.style.display = 'none';
+        });
+        
+        
+        document.querySelectorAll('.view-btn').forEach((btn, index) => {
+            btn.addEventListener('click', function() {
+                
+                const detailsRow = this.closest('tr').nextElementSibling;
+                
+                
+                if (detailsRow.style.display === 'none' || !detailsRow.style.display) {
+                    
+                    document.querySelectorAll('.doctor-order-details').forEach(row => {
+                        row.style.display = 'none';
+                    });
+                    
+                    
+                    document.querySelectorAll('.view-btn').forEach(button => {
+                        button.textContent = 'VIEW';
+                        button.classList.remove('active');
+                    });
+                    
+                    
+                    detailsRow.style.display = 'table-row';
+                    this.textContent = 'CLOSE';
+                    this.classList.add('active');
+                } else {
+                    
+                    detailsRow.style.display = 'none';
+                    this.textContent = 'VIEW';
+                    this.classList.remove('active');
+                }
+            });
+        });
+    });
+    </script>
+</head>
+<body>
+    <div class="section-title">
+        <div class="back-btn">
+            <a href="chhpa.html">
+                <img src="las.png" alt="las">
+            </a>
+        </div>
+        <h2 style="font-size: 30px;">DOCTOR'S ORDER</h2>
+        <div class="forward-btn">
+            <a href="cma.html">
+                <img src="ras.png" alt="ras">
+            </a>
+        </div>
+        <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+    </div>
+    <nav class = "sidebar close">
+        <header>
+            <a href="home.html" style="text-decoration:none">
+                <div class="image-text">
+                    <span class="image">
+                        <img src="logo.png" alt="logo">
+                    </span>
+    
+                    <div class="text header-text">
+                        <span class="title">Sterra Medical Center</span>
+                        <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                    </div>
+                </div>
+            </a>
+
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                        <i class='bx bx-search icon'></i>
+                        <input type="Search" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="db.html">
+                            <i class='bx bxs-dashboard icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <div class="dd">
+                        <li class="nav-link">
+                            <a href="">
+                                <i class='bx bx-folder-open icon'></i>
+                                <span class="text nav-text">Charts</span>
+                            </a>
+                            <div class="dd-content">
+                                <a href="c.html">Patient List</a>
+                                <a href="ap.html">Add a patient</a>
+                            </div>
+                        </li>
+                    </div>
+                    <li class="nav-link">
+                        <a href="am.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="f.html">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Finances</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="login.html">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="searchable-content">
+        <div class="lab-container">
+            <div class="hospital-info">
+                <div class="hospital-left">
+                    <div class="hospital-name">STERRA MEDICAL CENTER</div>
+                    <div class="hospital-location">Manila, Philippines</div>
+                </div>
+                <div class="lab-title-header">
+                    <img src="ehrlogo.png" alt="ehrlogo">
+                </div>
+            </div>
+            
+            <table class="lab-results-table">
+                <thead>
+                    <tr>
+                        <th>Lab No.</th>
+                        <th>Order Date</th>
+                        <th>Patient ID</th>
+                        <th>Patient Name</th>
+                        <th>Assigned Physician</th>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="patient-row">
+                        <td>2490040446</td>
+                        <td>APR-09-2025</td>
+                        <td>0010409202</td>
+                        <td>MAGSAYSAY, THEODORE P.</td>
+                        <td>Dr. Buchitots</td>
+                        <td>M</td>
+                        <td>25</td>
+                        <td>
+                            <button class="view-btn">VIEW</button>
+                        </td>
+                    </tr>
+                    <tr class="doctor-order-details">
+                        <td colspan="8">
+                            <div class="order-details-container">
+                                <div class="order-details-header">
+                                    <div class="patient-info">
+                                        <table class="patient-info-table">
+                                            <tr>
+                                                <td><strong>Name of Patient:</strong> Magsaysay, Theodore P.</td>
+                                                <td><strong>Dx:</strong> Hypertension, Hyperlipidemia, Atrial Fibrillation, Early Stage Hypertensive</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Date of Birth:</strong> 09/26/2000</td>
+                                                <td><strong>Room:</strong> 301</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Attending Physician:</strong> Dr. Buchitots</td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="doctor-order-content">
+                                    <h3>DOCTOR'S ORDER SHEET</h3>
+                                    <table class="order-details-table">
+                                        <thead>
+                                            <tr>
+                                                <th>PATIENT'S CONDITION/PROGRESS NOTE</th>
+                                                <th>DATE/TIME</th>
+                                                <th>DOCTOR'S ORDER</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td>04/09/2025</td>
+                                                <td>
+                                                    <p><strong>Emergency Intervention (ER Medication)</strong></p>
+                                                    <ul>
+                                                        <li>Labetalol 20 mg IV over 2 minutes – may repeat every 10 minutes as needed, or initiate continuous IV infusion at 1-2 mg/min</li>
+                                                        <li>Monitor BP every 5 minutes until stabilization</li>
+                                                        <li>Place patient on cardiac monitor during and after administration</li>
+                                                    </ul>
+                                                    <p><strong>Medications</strong></p>
+                                                    <ul>
+                                                        <li>Lisinopril 10 mg PO daily – for hypertension</li>
+                                                        <li>Amlodipine 5 mg PO daily – calcium channel blocker for blood pressure control</li>
+                                                        <li>Atorvastatin 40 mg PO at bedtime – for hyperlipidemia</li>
+                                                        <li>Apixaban 5 mg PO BID – for stroke prevention in atrial fibrillation</li>
+                                                        <li>Metoprolol Succinate 50 mg PO daily – for rate control in atrial fibrillation</li>
+                                                        <li>Aspirin 81 mg PO daily – cardioprotection</li>
+                                                    </ul>
+                                                    <p><strong>Monitoring</strong></p>
+                                                    <ul>
+                                                        <li>Weekly blood pressure checks</li>
+                                                        <li>Follow-up lipid panel in 6 weeks</li>
+                                                        <li>Renal function tests (BUN, creatinine, GFR) in 1 month</li>
+                                                        <li>ECG monitoring if symptomatic</li>
+                                                    </ul>
+                                                    <p><strong>Lifestyle Modifications</strong></p>
+                                                    <ul>
+                                                        <li>Low-sodium, heart-healthy diet</li>
+                                                        <li>Limit intake of saturated fats and cholesterol</li>
+                                                        <li>Weight reduction through diet and exercise</li>
+                                                        <li>Engage in 30 minutes of moderate-intensity exercise 5 days per week</li>
+                                                        <li>Smoking cessation counseling if applicable</li>
+                                                    </ul>
+                                                    <p><strong>Referrals</strong></p>
+                                                    <ul>
+                                                        <li>Cardiology consult for atrial fibrillation management</li>
+                                                        <li>Nephrology referral for early hypertensive kidney damage</li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="patient-row">
+                        <td>2598040467</td>
+                        <td>MAR-24-2025</td>
+                        <td>0020409202</td>
+                        <td>BATUMBAKAL, ELEANOR S.</td>
+                        <td>Dr. De Guzman</td>
+                        <td>F</td>
+                        <td>45</td>
+                        <td>
+                            <button class="view-btn">VIEW</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

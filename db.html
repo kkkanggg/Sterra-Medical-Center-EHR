@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="db.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>Dashboard</title>
+    <script>
+        window.onload = function () {
+            let username = localStorage.getItem("nurseName");
+    
+            if (username) {
+                document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                    el.textContent = username;
+                });
+            }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-box input");
+            const patientCards = document.querySelectorAll(".container-grid1 a");
+    
+            // Store original HTML for each card for accurate highlighting
+            patientCards.forEach(card => {
+                card.setAttribute("data-original-html", card.innerHTML);
+            });
+    
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase().trim();
+    
+                patientCards.forEach(card => {
+                    // Reset to original content first
+                    card.innerHTML = card.getAttribute("data-original-html");
+    
+                    const nameEl = card.querySelector(".name");
+                    const numEl = card.querySelector(".patient-number");
+    
+                    const nameText = nameEl.textContent.toLowerCase();
+                    const numText = numEl.textContent.toLowerCase();
+    
+                    const matches = nameText.includes(searchText) || numText.includes(searchText);
+    
+                    if (searchText === "") {
+                        card.style.display = "";
+                        return;
+                    }
+    
+                    if (matches) {
+                        card.style.display = "";
+    
+                        const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+    
+                        highlightText(nameEl, regex);
+                        highlightText(numEl, regex);
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+    
+            function highlightText(element, regex) {
+                element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1 class="db">DASHBOARD</h1>
+    <nav class = "sidebar close">
+        <header>
+            <a href="home.html" style="text-decoration:none">
+                <div class="image-text">
+                    <span class="image">
+                        <img src="logo.png" alt="logo">
+                    </span>
+    
+                    <div class="text header-text">
+                        <span class="title">Sterra Medical Center</span>
+                        <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                    </div>
+                </div>
+            </a>
+
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                        <i class='bx bx-search icon'></i>
+                        <input type="Search" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="db.html">
+                            <i class='bx bxs-dashboard icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <div class="dd">
+                        <li class="nav-link">
+                            <a href="">
+                                <i class='bx bx-folder-open icon'></i>
+                                <span class="text nav-text">Charts</span>
+                            </a>
+                            <div class="dd-content">
+                                <a href="c.html">Patient List</a>
+                                <a href="ap.html">Add a patient</a>
+                            </div>
+                        </li>
+                    </div>
+                    <li class="nav-link">
+                        <a href="am.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="f.html">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Finances</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="login.html">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="searchable-content">
+          <div class="container-grid1">
+            <a href="dbd1.html">
+                <div class="data-one">
+                    <div class="image-icon">
+                        <span class="image1">
+                            <img src="p1.png" alt="p1">
+                        </span>
+                        <div class="data1">
+                            <span class="name">00104092025</span>
+                            <span class="age">25 YRS OLD</span>
+                            <span class="year">09/26/2000</span>
+                        </div>
+                    </div>
+    
+                        <div class="status">
+                            <div class="s1">
+                                <i class='bx bxs-droplet icon' style="font-size: 35px"></i>
+                                <div class="o1">
+                                    <span class="bp">Blood Pressure</span>
+                                </div>
+                                <div class="o2">
+                                    <span class="num">150/95 mm HG</span>
+                                </div>
+                                <div class="uo1">
+                                    <i class='bx bxs-error-circle icon' style="font-size: 14px"></i>
+                                    <span class="num">Alarming</span>
+                                </div>
+                            </div>
+                            <div class="vertical-line"></div>
+                            <div class="s2">
+                                <i class='bx bxs-capsule icon' style="font-size: 34px"></i>
+                                <div class="o1">
+                                    <span class="med">Medications</span>
+                                </div>
+                                <div class="o2">
+                                    <span class="amo">Losartan 50 mg Oral tablet</span>
+                                </div>
+                                <div class="uo1">
+                                    <span class="num" style="color: red">22:00</span>
+                                </div>
+                            </div>
+                            <div class="vertical-line"></div>
+                            <div class="s3">
+                                <i class='bx bxs-flask icon' style="font-size: 35px"></i>
+                                <div class="o1">
+                                    <span class="lab">Laboratory</span>
+                                </div>
+                                <div class="o2">
+                                    <span class="kind">CBC</span>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </a>
+            
+            <a href="dbd2.html">
+                <div class="data-one">
+                    <div class="image-icon">
+                        <span class="image1">
+                            <img src="p2.png" alt="p1">
+                        </span>
+                        
+                        <div class="data1">
+                            <span class="name">00204092025</span>
+                            <span class="age">45 YRS OLD</span>
+                            <span class="year">05/25/1980</span>
+                        </div>
+                    </div>
+    
+                        <div class="status">
+                            <div class="s1">
+                                <i class='bx bxs-heart icon' style="font-size: 35px"></i>
+                                <div class="o1">
+                                    <span class="bp">Respiratory Rate</span>
+                                </div>
+                                <div class="o2">
+                                    <span class="num">30 bpm</span>
+                                </div>
+                                <div class="uo1">
+                                    <i class='bx bxs-chevrons-up icon' style="font-size: 14px"></i>
+                                    <span class="num">Higher than Average</span>
+                                </div>
+                            </div>
+                        </div>
+              </div>
+            </a>
+      </div>
+        <div class="container-grid2">
+            <div class="data-two">
+                <h1 class="td">TO DO</h1>
+                <div class="todo-list">
+                    <div class="todo-item">
+                        <input type="checkbox" id="vital-signs">
+                        <label for="vital-signs">Monitor vital signs of px (insert px number ni magsaysay every 5 minutes)</label>
+                    </div>
+                    <div class="todo-item">
+                        <input type="checkbox" id="referrals">
+                        <label for="referrals">Coordinate referrals to cardiology and nephrology as ordered.</label>
+                    </div>
+                    <div class="todo-item">
+                        <input type="checkbox" id="lab-work">
+                        <label for="lab-work">Schedule follow-up lab work (lipid panel, renal function tests).</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-two">
+                <h1 class="td">APPOINTMENT LIST</h1>
+                <div class="appointment-container">
+                    <table class="appointment-table">
+                        <thead>
+                            <tr>
+                                <th>PX Number</th>
+                                <th>Date of Appt.</th>
+                                <th>Physician Assigned</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    00204092025
+                                </td>
+                                <td>04/28/2025</td>
+                                <td>Dr. De Guzman</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="appointment-container">
+                    <table class="appointment-table">
+                        <thead>
+                            <tr>
+                                <th>PX Number</th>
+                                <th>Date of Appt.</th>
+                                <th>Physician Assigned</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    00104092025
+                                </td>
+                                <td>04/30/2025</td>
+                                <td>Dr. Buchitots</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

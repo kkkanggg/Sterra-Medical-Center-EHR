@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="cesi.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>ESI</title>
+    <script>
+        window.onload = function () {
+            let username = localStorage.getItem("nurseName");
+    
+            if (username) {
+                document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                    el.textContent = username;
+                });
+            }
+
+                // Auto-select ESI Level 3
+    const esi3RadioButton = document.querySelector('input[name="esiLevel"][value="3"]');
+    if (esi3RadioButton) {
+        esi3RadioButton.checked = true;
+    }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-box input");
+            const patientCards = document.querySelectorAll(".container-grid1 a");
+    
+            // Store original HTML for each card for accurate highlighting
+            patientCards.forEach(card => {
+                card.setAttribute("data-original-html", card.innerHTML);
+            });
+    
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase().trim();
+    
+                patientCards.forEach(card => {
+                    // Reset to original content first
+                    card.innerHTML = card.getAttribute("data-original-html");
+    
+                    const nameEl = card.querySelector(".name");
+                    const numEl = card.querySelector(".patient-number");
+    
+                    const nameText = nameEl.textContent.toLowerCase();
+                    const numText = numEl.textContent.toLowerCase();
+    
+                    const matches = nameText.includes(searchText) || numText.includes(searchText);
+    
+                    if (searchText === "") {
+                        card.style.display = "";
+                        return;
+                    }
+    
+                    if (matches) {
+                        card.style.display = "";
+    
+                        const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+    
+                        highlightText(nameEl, regex);
+                        highlightText(numEl, regex);
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+    
+            function highlightText(element, regex) {
+                element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+            }
+        });
+
+        // esi function
+
+        document.addEventListener("DOMContentLoaded", function() {
+    const triageForm = document.getElementById("triageForm");
+    
+    if (triageForm) {
+        triageForm.addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            // Get selected ESI level
+            const selectedESI = document.querySelector('input[name="esiLevel"]:checked');
+            
+            if (selectedESI) {
+                // Store the ESI level in localStorage
+                localStorage.setItem("selectedESILevel", selectedESI.value);
+                
+                // Log to verify it's working
+                console.log("ESI level set: " + selectedESI.value);
+                
+                // Navigate to the initial assessment page
+                window.location.href = "cia.html";
+            } else {
+                alert("Please select an ESI level before submitting.");
+            }
+        });
+    } else {
+        console.error("Triage form not found in the document!");
+    }
+});
+    </script>
+    <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    font-family:'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing:border-box;
+}
+
+:root{
+    --body-color:#E4E9f7;
+    --sidebar-color:#FFF;
+    --primary-color:#695CFE;
+    --primary-color-light:#F6F5FF;
+    --toggle-color:#DDD;
+    --text-color:#707070;
+    --base-color:#205781;
+    --dash-color:#f7f6f2;
+
+    --tran-02: all 0.2s ease ;
+    --tran-03: all 0.3s ease ;
+    --tran-04: all 0.4s ease ;
+    --tran-05: all 0.5s ease ;
+}
+        .esi-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .esi-card {
+            flex: 1;
+            border-radius: 8px;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 420px;
+        }
+        
+        .esi-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+        
+        .esi-subtitle {
+            font-size: 18px;
+            font-weight: 500;
+            margin: 5px 0 15px 0;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+        
+        .esi-divider {
+            height: 1px;
+            background-color: rgba(255,255,255,0.5);
+            margin: 10px 0;
+            width: 100%;
+        }
+        
+        .esi-conditions {
+            padding: 10px 10px;
+            background-color: var(--dash-color);
+            border-radius: 10px;
+            text-align: left;
+            font-size: 14px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .esi-condition {
+            display: flex;
+            color: black;
+            margin: 2px 0;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .esi-1 {
+            background-color: #d32f2f; /* Red */
+        }
+        
+        .esi-2 {
+            background-color: #ff9000; /* Orange - adjusted to match image */
+        }
+        
+        .esi-3 {
+            background-color: #c0d82f; /* Yellow-Green - adjusted to match image */
+        }
+        
+        .esi-4 {
+            background-color: #4caf50; /* Green */
+        }
+        
+        .esi-5 {
+            background-color: #2196f3; /* Blue */
+        }
+        
+        .esi-instructions {
+            margin-bottom: 15px;
+            padding: 0;
+            color: #333;
+        }
+        
+        .esi-instructions h3 {
+            color: var(--base-color);
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="section-title">
+        <div class="back-btn">
+            <a href="cmh.html">
+                <img src="las.png" alt="las">
+            </a>
+        </div>
+        <h2 style="font-size: 30px;">EMERGENCY SEVERITY INDEX</h2>
+        <div class="forward-btn">
+            <a href="cprf.html">
+                <img src="ras.png" alt="ras">
+            </a>
+        </div>
+        <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+    </div>
+    <nav class = "sidebar close">
+        <header>
+            <a href="home.html" style="text-decoration:none">
+                <div class="image-text">
+                    <span class="image">
+                        <img src="logo.png" alt="logo">
+                    </span>
+    
+                    <div class="text header-text">
+                        <span class="title">Sterra Medical Center</span>
+                        <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                    </div>
+                </div>
+            </a>
+
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                        <i class='bx bx-search icon'></i>
+                        <input type="Search" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="db.html">
+                            <i class='bx bxs-dashboard icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <div class="dd">
+                        <li class="nav-link">
+                            <a href="">
+                                <i class='bx bx-folder-open icon'></i>
+                                <span class="text nav-text">Charts</span>
+                            </a>
+                            <div class="dd-content">
+                                <a href="c.html">Patient List</a>
+                                <a href="ap.html">Add a patient</a>
+                            </div>
+                        </li>
+                    </div>
+                    <li class="nav-link">
+                        <a href="am.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="f.html">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Finances</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="login.html">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="searchable-content">
+        <div class="esi-instructions">
+            <h3>Emergency Severity Index (ESI) Triage System</h3>
+            <p>The ESI is a five-level emergency department triage algorithm that categorizes patients by evaluating both patient acuity and resource needs. Please use the following categories to properly triage patients based on their condition severity.</p>
+        </div>
+        
+        <div class="esi-container">
+            <div class="esi-card esi-1">
+                <div class="esi-title">ESI 1</div>
+                <div class="esi-subtitle">RESUSCITATION<br>SEEN IMMEDIATELY</div>
+                <div class="esi-divider"></div>
+                <div class="esi-conditions">
+                    <h4 class="esi-condition">CARDIAC AND RESPIRATORY ARREST</h4>
+                    <h4 class="esi-condition">UNRESPONSIVE/UNCONSCIOUS</h4>
+                    <h4 class="esi-condition">LIFE AND LIMB THREATENING</h4>
+                    <h4 class="esi-condition">MAJOR TRAUMA</h4>
+                </div>
+            </div>
+            
+            <div class="esi-card esi-2">
+                <div class="esi-title">ESI 2</div>
+                <div class="esi-subtitle">EMERGENT<br>SEEN WITHIN 15 MIN.</div>
+                <div class="esi-divider"></div>
+                <div class="esi-conditions">
+                    <h4 class="esi-condition">ACTIVE SEIZURES</h4>
+                    <h4 class="esi-condition">SIGNS OF STROKE</h4>
+                    <h4 class="esi-condition">PROFUSE BLEEDING</h4>
+                    <h4 class="esi-condition">SEVERE ALLERGIC REACTION</h4>
+                    <h4 class="esi-condition">RESPIRATORY DISTRESS</h4>
+                </div>
+            </div>
+            
+            <div class="esi-card esi-3">
+                <div class="esi-title">ESI 3</div>
+                <div class="esi-subtitle">URGENT<br>SEEN WITHIN 60 MIN.</div>
+                <div class="esi-divider"></div>
+                <div class="esi-conditions">
+                    <h4 class="esi-condition">PALPITATION</h4>
+                    <h4 class="esi-condition">CHEST PAIN</h4>
+                    <h4 class="esi-condition">MILD ASTHMA ATTACKS</h4>
+                    <h4 class="esi-condition">ABDOMINAL PAIN</h4>
+                    <h4 class="esi-condition">DIARRHEA</h4>
+                    <h4 class="esi-condition">ACTIVE VOMITING</h4>
+                    <h4 class="esi-condition">VAGINAL BLEEDING</h4>
+                </div>
+            </div>
+            
+            <div class="esi-card esi-4">
+                <div class="esi-title">ESI 4</div>
+                <div class="esi-subtitle">LESS URGENT<br>SEEN WITHIN 120 MIN.</div>
+                <div class="esi-divider"></div>
+                <div class="esi-conditions">
+                    <h4 class="esi-condition">MINOR TRAUMA</h4>
+                    <h4 class="esi-condition">RASHES</h4>
+                    <h4 class="esi-condition">RED EYE(S)</h4>
+                    <h4 class="esi-condition">BACK PAIN</h4>
+                    <h4 class="esi-condition">HEADACHES</h4>
+                    <h4 class="esi-condition">ALLERGY</h4>
+                    <h4 class="esi-condition">FEVER</h4>
+                </div>
+            </div>
+            
+            <div class="esi-card esi-5">
+                <div class="esi-title">ESI 5</div>
+                <div class="esi-subtitle">NON URGENT<br>SEEN WITHIN 150 MIN.</div>
+                <div class="esi-divider"></div>
+                <div class="esi-conditions">
+                    <h4 class="esi-condition">COUGH/COLDS</h4>
+                    <h4 class="esi-condition">PAINFUL URINATION</h4>
+                    <h4 class="esi-condition">SORE THROAT</h4>
+                    <h4 class="esi-condition">RABIES VACCINATION</h4>
+                    <h4 class="esi-condition">SIMPLE WOUND</h4>
+                    <h4 class="esi-condition">CHANGE IN FOLEY CATHETER</h4>
+                    <h4 class="esi-condition">LESS THAN 1 DAY LOW GRADE FEVER</h4>
+                    <h4 class="esi-condition">NGT INSERTION</h4>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add a section for the patient triage form -->
+        <div style="margin-top: 30px; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            <h3 style="color: var(--base-color); margin-bottom: 15px;">Patient Triage Assessment</h3>
+            <form id="triageForm">
+                
+                <div style="margin-top: 20px;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: 500;">ESI Level Assessment</label>
+                    <div style="display: flex; gap: 15px;">
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="esiLevel" value="1"> 
+                            <span style="background-color: #d32f2f; color: white; padding: 5px 10px; border-radius: 4px;">ESI 1</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="esiLevel" value="2"> 
+                            <span style="background-color: #ff9000; color: white; padding: 5px 10px; border-radius: 4px;">ESI 2</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="esiLevel" value="3"> 
+                            <span style="background-color: #c0d82f; color: black; padding: 5px 10px; border-radius: 4px;">ESI 3</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="esiLevel" value="4"> 
+                            <span style="background-color: #4caf50; color: white; padding: 5px 10px; border-radius: 4px;">ESI 4</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="esiLevel" value="5"> 
+                            <span style="background-color: #2196f3; color: white; padding: 5px 10px; border-radius: 4px;">ESI 5</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+                    <button type="submit" style="background-color: var(--base-color); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Submit Triage Assessment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,433 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="db.css">
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <title>Vital Signs Monitoring</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    * {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --body-color: #E4E9f7;
+      --sidebar-color: #FFF;
+      --primary-color: #695CFE;
+      --primary-color-light: #F6F5FF;
+      --toggle-color: #DDD;
+      --text-color: #707070;
+      --base-color: #205781;
+      --dash-color: #f7f6f2;
+
+      --tran-02: all 0.2s ease;
+      --tran-03: all 0.3s ease;
+      --tran-04: all 0.4s ease;
+      --tran-05: all 0.5s ease;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden; 
+      background-color: var(--base-color);
+    }
+
+    .dashboard{
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    margin-left: 300px;  /* Leaves space for sidebar */
+    margin-top: 70px;    /* Avoids overlapping the header */
+    width: calc(100% - 300px);
+    box-sizing: border-box;
+    background: var(--dash-color);
+    border-radius: 20px;
+    z-index: 1;
+}
+
+.section-title{
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  align-items: center;
+  margin-right: 10px;
+  gap: 10px;
+  left: 305px;
+  top: 15px;
+  color: var(--dash-color);
+  z-index: 99;
+}
+
+.back-btn img{
+  width: 20px;
+}
+
+.forward-btn img{
+  width: 20px;
+}
+
+.patient-name{
+  font-size: 25px;
+  margin-left:  770px;
+  color: var(--dash-color);
+  opacity: 0.5;
+}
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      table-layout: fixed;
+    }
+
+    thead th {
+      background-color: #f7f7f5;
+      font-weight: 600;
+      font-size: 10px;
+      color: black;
+      border: 1px solid black;
+      padding: 8px 6px;
+      text-align: left;
+      user-select: none;
+    }
+
+    thead th[colspan] {
+      text-align: center;
+    }
+
+    tbody td {
+      border: 1px solid black;
+      padding: 8px 6px;
+      font-weight: 600;
+      font-size: 10px;
+      color: black;
+      user-select: text;
+      word-wrap: break-word;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    tbody td:first-child {
+      text-align: left;
+      background-color: #9dd5db;
+      user-select: none;
+      font-weight: 700;
+    }
+
+    
+    tbody td:nth-child(2) {
+      background-color: #d7c9c3;
+    }
+    tbody td:nth-child(3) {
+      background-color: #b7d3bb;
+    }
+    tbody td:nth-child(4) {
+      background-color: #b8bbdb;
+    }
+    tbody td:nth-child(5) {
+      background-color: #d9cfae;
+    }
+
+    
+    tbody td:nth-child(6) {
+      background-color: #d7c9c3;
+    }
+    tbody td:nth-child(7) {
+      background-color: #b7d3bb;
+    }
+    tbody td:nth-child(8) {
+      background-color: #b8bbdb;
+    }
+    tbody td:nth-child(9) {
+      background-color: #d9cfae;
+    }
+
+
+    thead th:first-child {
+      min-width: 70px;
+    }
+
+    tbody tr:first-child td {
+      font-weight: 700;
+    }
+
+
+    .blood-pressure {
+      white-space: normal;
+      line-height: 1.2;
+    }
+
+
+    @media (min-width: 640px) {
+      h1 {
+        font-size: 1.75rem;
+      }
+      thead th, tbody td {
+        font-size: 13px;
+      }
+    }
+
+ 
+    tbody td.editable {
+      cursor: text;
+      padding: 4px 6px;
+    }
+    tbody td.editable:focus {
+      outline: 2px solid var(--primary-color);
+      background-color: #fff;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="section-title">
+    <div class="back-btn">
+        <a href="cia.html">
+            <img src="las.png" alt="las">
+        </a>
+    </div>
+    <h2 style="font-size: 30px;">VITAL SIGNS MONITORING</h2>
+    <div class="forward-btn">
+        <a href="cir.html">
+            <img src="ras.png" alt="ras">
+        </a>
+    </div>
+    <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+</div>
+  <div class="dashboard">
+    <table>
+      <thead>
+        <tr>
+          <th>DATE</th>
+          <th colspan="4">04/09/2025</th>
+          <th colspan="4">04/10/2025</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SHIFT</td>
+          <td class="editable" contenteditable="true">AM</td>
+          <td class="editable" contenteditable="true">PM</td>
+          <td class="editable" contenteditable="true">NIGHT</td>
+          <td class="editable" contenteditable="true">PRN</td>
+          <td class="editable" contenteditable="true">AM</td>
+          <td class="editable" contenteditable="true">PM</td>
+          <td class="editable" contenteditable="true">NIGHT</td>
+          <td class="editable" contenteditable="true">PRN</td>
+        </tr>
+        <tr>
+          <td>TIME TAKEN</td>
+          <td class="editable" contenteditable="true">10:45</td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td class="blood-pressure">BLOOD<br />PRESSURE</td>
+          <td class="editable" contenteditable="true">150/90<br />mmHg</td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>TEMPERATURE</td>
+          <td class="editable" contenteditable="true">37.2 C</td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>PULSE RATE</td>
+          <td class="editable" contenteditable="true">110 bpm</td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>RESPIRATORY RATE</td>
+          <td class="editable" contenteditable="true">22 bpm</td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>SPO2</td>
+          <td class="editable" contenteditable="true">94%</td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>PAIN RATE</td>
+          <td class="editable" contenteditable="true">5</td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    window.onload = function () {
+        let username = localStorage.getItem("nurseName");
+
+        if (username) {
+            document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                el.textContent = username;
+            });
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector(".search-box input");
+        const patientCards = document.querySelectorAll(".container-grid1 a");
+
+        // Store original HTML for each card for accurate highlighting
+        patientCards.forEach(card => {
+            card.setAttribute("data-original-html", card.innerHTML);
+        });
+
+        searchInput.addEventListener("input", function () {
+            const searchText = searchInput.value.toLowerCase().trim();
+
+            patientCards.forEach(card => {
+                // Reset to original content first
+                card.innerHTML = card.getAttribute("data-original-html");
+
+                const nameEl = card.querySelector(".name");
+                const numEl = card.querySelector(".patient-number");
+
+                const nameText = nameEl.textContent.toLowerCase();
+                const numText = numEl.textContent.toLowerCase();
+
+                const matches = nameText.includes(searchText) || numText.includes(searchText);
+
+                if (searchText === "") {
+                    card.style.display = "";
+                    return;
+                }
+
+                if (matches) {
+                    card.style.display = "";
+
+                    const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+
+                    highlightText(nameEl, regex);
+                    highlightText(numEl, regex);
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+        function highlightText(element, regex) {
+            element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+        }
+    });
+</script>
+</head>
+<body>
+<nav class = "sidebar close">
+    <header>
+        <a href="home.html" style="text-decoration:none">
+            <div class="image-text">
+                <span class="image">
+                    <img src="logo.png" alt="logo">
+                </span>
+
+                <div class="text header-text">
+                    <span class="title">Sterra Medical Centers</span>
+                    <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                </div>
+            </div>
+        </a>
+
+    </header>
+    <div class="menu-bar">
+        <div class="menu">
+            <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="Search" placeholder="Search...">
+            </li>
+            <ul class="menu-links">
+                <li class="nav-link">
+                    <a href="db.html">
+                        <i class='bx bxs-dashboard icon'></i>
+                        <span class="text nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <div class="dd">
+                    <li class="nav-link">
+                        <a href="">
+                            <i class='bx bx-folder-open icon'></i>
+                            <span class="text nav-text">Charts</span>
+                        </a>
+                        <div class="dd-content">
+                            <a href="c.html">Patient List</a>
+                            <a href="ap.html">Add a patient</a>
+                        </div>
+                    </li>
+                </div>
+                <li class="nav-link">
+                    <a href="am.html">
+                        <i class='bx bx-calendar icon'></i>
+                        <span class="text nav-text">Appointment</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="f.html">
+                        <i class='bx bx-receipt icon'></i>
+                        <span class="text nav-text">Finances</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bottom-content">
+            <li class="">
+                <a href="login.html">
+                    <i class='bx bx-log-out icon'></i>
+                    <span class="text nav-text">logout</span>
+                </a>
+            </li>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

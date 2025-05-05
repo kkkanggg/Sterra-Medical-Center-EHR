@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="cma.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
+    <title>Medications and Allergies</title>
+    <script>
+        window.onload = function () {
+            let username = localStorage.getItem("nurseName");
+    
+            if (username) {
+                document.querySelectorAll(".usernamePlaceholder").forEach(el => {
+                    el.textContent = username;
+                });
+            }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-box input");
+            const patientCards = document.querySelectorAll(".container-grid1 a");
+    
+            patientCards.forEach(card => {
+                card.setAttribute("data-original-html", card.innerHTML);
+            });
+    
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase().trim();
+    
+                patientCards.forEach(card => {
+                    
+                    card.innerHTML = card.getAttribute("data-original-html");
+    
+                    const nameEl = card.querySelector(".name");
+                    const numEl = card.querySelector(".patient-number");
+    
+                    const nameText = nameEl.textContent.toLowerCase();
+                    const numText = numEl.textContent.toLowerCase();
+    
+                    const matches = nameText.includes(searchText) || numText.includes(searchText);
+    
+                    if (searchText === "") {
+                        card.style.display = "";
+                        return;
+                    }
+    
+                    if (matches) {
+                        card.style.display = "";
+    
+                        const regex = new RegExp(`(${searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+    
+                        highlightText(nameEl, regex);
+                        highlightText(numEl, regex);
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+    
+            function highlightText(element, regex) {
+                element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+            }
+        });
+
+        // new update 
+        document.addEventListener('DOMContentLoaded', function() {
+        
+        const medicationItems = document.querySelectorAll('.medication-item');
+        
+        medicationItems.forEach(item => {
+            const header = item.querySelector('.medication-header');
+            const details = item.querySelector('.medication-details');
+            
+            
+            details.style.display = 'none';
+            
+            
+            header.addEventListener('click', function() {
+                
+                if (details.style.display === 'none') {
+                    
+                    document.querySelectorAll('.medication-details').forEach(detail => {
+                        detail.style.display = 'none';
+                    });
+                    
+                    
+                    details.style.display = 'block';
+                    item.classList.add('active');
+                    
+                    
+                    medicationItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                } else {
+                    
+                    details.style.display = 'none';
+                    item.classList.remove('active');
+                }
+            });
+        });
+        
+        
+        const drugAllergyRadios = document.querySelectorAll('input[name="drug-allergy-status"]');
+        const foodAllergyRadios = document.querySelectorAll('input[name="food-allergy-status"]');
+        const envAllergyRadios = document.querySelectorAll('input[name="environmental-allergy-status"]');
+        
+        function setupAllergyRadios(radios, checkboxContainer) {
+            radios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const hasAllergy = this.parentElement.querySelector('.option-text').textContent.trim() === 'has allergy';
+                    const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
+                    
+                    checkboxes.forEach(checkbox => {
+                        checkbox.disabled = !hasAllergy;
+                        if (!hasAllergy) {
+                            checkbox.checked = false;
+                            checkbox.parentElement.querySelector('.checkbox-custom').classList.remove('checked');
+                        }
+                    });
+                    
+                    
+                    radios.forEach(r => {
+                        const checkmark = r.parentElement.querySelector('.checkmark');
+                        if (r.checked) {
+                            checkmark.classList.add('checked');
+                        } else {
+                            checkmark.classList.remove('checked');
+                        }
+                    });
+                });
+            });
+        }
+        
+        
+        const drugCheckboxContainer = document.querySelector('input[name="drug-allergy-status"]').closest('.allergy-section').querySelector('.allergy-select-area');
+        const foodCheckboxContainer = document.querySelector('input[name="food-allergy-status"]').closest('.allergy-section').querySelector('.allergy-select-area');
+        const envCheckboxContainer = document.querySelector('input[name="environmental-allergy-status"]').closest('.allergy-section').querySelector('.allergy-select-area');
+        
+        
+        setupAllergyRadios(drugAllergyRadios, drugCheckboxContainer);
+        setupAllergyRadios(foodAllergyRadios, foodCheckboxContainer);
+        setupAllergyRadios(envAllergyRadios, envCheckboxContainer);
+        
+        
+        const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+        
+        allCheckboxes.forEach(checkbox => {
+            
+            if (checkbox.checked) {
+                checkbox.parentElement.querySelector('.checkbox-custom').classList.add('checked');
+            }
+            
+            checkbox.addEventListener('change', function() {
+                const customCheckbox = this.parentElement.querySelector('.checkbox-custom');
+                
+                if (this.checked) {
+                    customCheckbox.classList.add('checked');
+                } else {
+                    customCheckbox.classList.remove('checked');
+                }
+            });
+        });
+        
+       
+        function initializeCheckboxState(radios, checkboxContainer) {
+            let hasAllergy = false;
+            
+            radios.forEach(radio => {
+                if (radio.checked && radio.parentElement.querySelector('.option-text').textContent.trim() === 'has allergy') {
+                    hasAllergy = true;
+                }
+            });
+            
+            const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.disabled = !hasAllergy;
+            });
+        }
+        
+        
+        initializeCheckboxState(drugAllergyRadios, drugCheckboxContainer);
+        initializeCheckboxState(foodAllergyRadios, foodCheckboxContainer);
+        initializeCheckboxState(envAllergyRadios, envCheckboxContainer);
+    });
+
+    </script>
+</head>
+<body>
+    <div class="section-title">
+        <div class="back-btn">
+            <a href="cdo.html">
+                <img src="las.png" alt="las">
+            </a>
+        </div>
+        <h2 style="font-size: 30px;">MEDICATIONS AND ALLGERGIES</h2>
+        <div class="forward-btn">
+            <a href="cio.html">
+                <img src="ras.png" alt="ras">
+            </a>
+        </div>
+        <text class="patient-name">MAGSAYSAY, THEODORE P.</text>
+    </div>
+    <nav class = "sidebar close">
+        <header>
+            <a href="home.html" style="text-decoration:none">
+                <div class="image-text">
+                    <span class="image">
+                        <img src="logo.png" alt="logo">
+                    </span>
+    
+                    <div class="text header-text">
+                        <span class="title">Sterra Medical Center</span>
+                        <span class="usernamePlaceholder" style="margin-top: -2px;">Loading...</span>
+                    </div>
+                </div>
+            </a>
+
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                        <i class='bx bx-search icon'></i>
+                        <input type="Search" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="db.html">
+                            <i class='bx bxs-dashboard icon'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <div class="dd">
+                        <li class="nav-link">
+                            <a href="">
+                                <i class='bx bx-folder-open icon'></i>
+                                <span class="text nav-text">Charts</span>
+                            </a>
+                            <div class="dd-content">
+                                <a href="c.html">Patient List</a>
+                                <a href="ap.html">Add a patient</a>
+                            </div>
+                        </li>
+                    </div>
+                    <li class="nav-link">
+                        <a href="am.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="f.html">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Finances</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="login.html">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="searchable-content">
+
+            <div class="allergy-medication-container">
+                <!-- Drug Allergies Section -->
+                <div class="allergy-section">
+                    <div class="section-header drug-allergies">
+                        DRUG ALLERGIES
+                    </div>
+                    <div class="allergy-content">
+                        <div class="allergy-option">
+                            <label>
+                                <input type="radio" name="drug-allergy-status" checked>
+                                <span class="checkmark checked"></span>
+                                <span class="option-text">no allergy</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="drug-allergy-status">
+                                <span class="checkmark"></span>
+                                <span class="option-text">has allergy</span>
+                            </label>
+                        </div> 
+                        <div class="allergy-select-area">
+                            <p class="select-all-text">select all that apply</p>
+                            <div class="allergy-options">
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="drug-allergy" value="penicillin">
+                                        <span class="checkbox-custom"></span>
+                                        Penicillin
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="drug-allergy" value="cephalosporins">
+                                        <span class="checkbox-custom"></span>
+                                        Cephalosporins
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="drug-allergy" value="insulin">
+                                        <span class="checkbox-custom"></span>
+                                        Insulin
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="drug-allergy" value="nsaids">
+                                        <span class="checkbox-custom"></span>
+                                        NSAIDS
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="drug-allergy" value="anticonvulsants">
+                                        <span class="checkbox-custom"></span>
+                                        Anticonvulsants
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Food Allergies Section -->
+                <div class="allergy-section">
+                    <div class="section-header food-allergies">
+                        FOOD ALLERGIES
+                    </div>
+                    <div class="allergy-content">
+                        <div class="allergy-option">
+                            <label>
+                                <input type="radio" name="food-allergy-status">
+                                <span class="checkmark"></span>
+                                <span class="option-text">no allergy</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="food-allergy-status" checked>
+                                <span class="checkmark checked"></span>
+                                <span class="option-text">has allergy</span>
+                            </label>
+                        </div>
+                        <div class="allergy-select-area">
+                            <p class="select-all-text">select all that apply</p>
+                            <div class="allergy-options">
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="food-allergy" value="peanut-butter" checked>
+                                        <span class="checkbox-custom checked"></span>
+                                        Peanut Butter
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="food-allergy" value="fish">
+                                        <span class="checkbox-custom"></span>
+                                        Fish
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="food-allergy" value="shrimp">
+                                        <span class="checkbox-custom"></span>
+                                        Shrimp
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="food-allergy" value="beef">
+                                        <span class="checkbox-custom"></span>
+                                        Beef
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="food-allergy" value="eggs">
+                                        <span class="checkbox-custom"></span>
+                                        Eggs
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Environmental Allergies Section -->
+                <div class="allergy-section">
+                    <div class="section-header environmental-allergies">
+                        ENVIRONMENTAL ALLERGIES
+                    </div>
+                    <div class="allergy-content">
+                        <div class="allergy-option">
+                            <label>
+                                <input type="radio" name="environmental-allergy-status" checked>
+                                <span class="checkmark checked"></span>
+                                <span class="option-text">no allergy</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="environmental-allergy-status">
+                                <span class="checkmark"></span>
+                                <span class="option-text">has allergy</span>
+                            </label>
+                        </div>
+                        <div class="allergy-select-area">
+                            <p class="select-all-text">select all that apply</p>
+                            <div class="allergy-options">
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="env-allergy" value="pollen">
+                                        <span class="checkbox-custom"></span>
+                                        Pollen
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="env-allergy" value="dust-mites">
+                                        <span class="checkbox-custom"></span>
+                                        Dust mites
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="env-allergy" value="mold">
+                                        <span class="checkbox-custom"></span>
+                                        Mold
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="env-allergy" value="cockroach">
+                                        <span class="checkbox-custom"></span>
+                                        Cockroach
+                                    </label>
+                                </div>
+                                <div class="allergy-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="env-allergy" value="pets">
+                                        <span class="checkbox-custom"></span>
+                                        Pets
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="medication-container">
+                            <!-- Medications Section -->
+                            <div class="medication-section">
+                                <div class="section-header medications">
+                                    MEDICATIONS
+                                </div>
+                                <div class="medication-list">
+                                    <div class="medication-item" data-medication-id="1">
+                                        <div class="medication-header">
+                                            <div class="medication-number">1</div>
+                                            <div class="medication-name">Labetalol</div>
+                                        </div>
+                                        <div class="medication-details">
+                                            <div class="medication-info">
+                                                <h3>Labetalol 100mg Oral Tablet (BID)</h3>
+                                                <div class="medication-alerts">
+                                                    <strong>ALERTS</strong>
+                                                    <p>Monitor blood pressure regularly</p>
+                                                </div>
+                                                <div class="medication-recorded">
+                                                    <strong>RECORDED</strong>
+                                                    <p>04/09/2025 10:30 AM</p>
+                                                </div>
+                                                <div class="medication-notes">
+                                                    <strong>NOTES</strong>
+                                                    <p>Administer Labetalol 20 mg IV over 2 minutes – may repeat every 10 minutes as needed, or initiate continuous IV infusion at 1–2 mg/min</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="medication-item" data-medication-id="2">
+                                        <div class="medication-header">
+                                            <div class="medication-number">2</div>
+                                            <div class="medication-name">Lisonopril</div>
+                                        </div>
+                                        <div class="medication-details">
+                                            <div class="medication-info">
+                                                <h3>Lisonopril 10mg Oral Tablet (QD)</h3>
+                                                <div class="medication-alerts">
+                                                    <strong>ALERTS</strong>
+                                                    <p>Do not use if pregnant</p>
+                                                </div>
+                                                <div class="medication-recorded">
+                                                    <strong>RECORDED</strong>
+                                                    <p>04/09/2025 10:30 AM</p>
+                                                </div>
+                                                <div class="medication-notes">
+                                                    <strong>NOTES</strong>
+                                                    <p>Take Lisinopril 10 mg PO daily – for hypertension and renal protection</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="medication-item" data-medication-id="3">
+                                        <div class="medication-header">
+                                            <div class="medication-number">3</div>
+                                            <div class="medication-name">Amlodipine</div>
+                                        </div>
+                                        <div class="medication-details">
+                                            <div class="medication-info">
+                                                <h3>Amlodipine 5mg Oral Tablet (QD)</h3>
+                                                <div class="medication-alerts">
+                                                    <strong>ALERTS</strong>
+                                                    <p>May cause dizziness</p>
+                                                </div>
+                                                <div class="medication-recorded">
+                                                    <strong>RECORDED</strong>
+                                                    <p>04/09/2025 10:30 AM</p>
+                                                </div>
+                                                <div class="medication-notes">
+                                                    <strong>NOTES</strong>
+                                                    <p>Take Amlodipine 5 mg PO daily – calcium channel blocker for blood pressure control</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="medication-item" data-medication-id="4">
+                                        <div class="medication-header">
+                                            <div class="medication-number">4</div>
+                                            <div class="medication-name">Atorvastatin</div>
+                                        </div>
+                                        <div class="medication-details">
+                                            <div class="medication-info">
+                                                <h3>Atorvastatin 20mg Oral Tablet (QD)</h3>
+                                                <div class="medication-alerts">
+                                                    <strong>ALERTS</strong>
+                                                    <p>Take in the evening</p>
+                                                </div>
+                                                <div class="medication-recorded">
+                                                    <strong>RECORDED</strong>
+                                                    <p>04/09/2025 10:30 AM</p>
+                                                </div>
+                                                <div class="medication-notes">
+                                                    <strong>NOTES</strong>
+                                                    <p>Take Atorvastatin 40 mg PO at bedtime – for hyperlipidemia</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="medication-item" data-medication-id="5">
+                                        <div class="medication-header">
+                                            <div class="medication-number">5</div>
+                                            <div class="medication-name">Apixaban</div>
+                                        </div>
+                                        <div class="medication-details">
+                                            <div class="medication-info">
+                                                <h3>Apixaban 5mg Oral Tablet (BID)</h3>
+                                                <div class="medication-alerts">
+                                                    <strong>ALERTS</strong>
+                                                    <p>Risk of bleeding. Notify physician if experiencing unusual bleeding or bruising</p>
+                                                </div>
+                                                <div class="medication-recorded">
+                                                    <strong>RECORDED</strong>
+                                                    <p>04/09/2025 10:30 AM</p>
+                                                </div>
+                                                <div class="medication-notes">
+                                                    <strong>NOTES</strong>
+                                                    <p>Take Apixaban 5 mg PO BID – for stroke prevention in atrial fibrillation</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="medication-item" data-medication-id="6">
+                                        <div class="medication-header">
+                                            <div class="medication-number">6</div>
+                                            <div class="medication-name">Metoprolol Succinate</div>
+                                        </div>
+                                        <div class="medication-details">
+                                            <div class="medication-info">
+                                                <h3>Metoprolol Succinate 50mg Oral Tablet (QD)</h3>
+                                                <div class="medication-alerts">
+                                                    <strong>ALERTS</strong>
+                                                    <p>Do not stop taking suddenly</p>
+                                                </div>
+                                                <div class="medication-recorded">
+                                                    <strong>RECORDED</strong>
+                                                    <p>04/09/2025 10:30 AM</p>
+                                                </div>
+                                                <div class="medication-notes">
+                                                    <strong>NOTES</strong>
+                                                    <p>Take Metoprolol Succinate 50 mg PO daily – for rate control in atrial fibrillation</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="medication-item" data-medication-id="7">
+                                        <div class="medication-header">
+                                            <div class="medication-number">7</div>
+                                            <div class="medication-name">Aspirin</div>
+                                        </div>
+                                        <div class="medication-details">
+                                            <div class="medication-info">
+                                                <h3>Aspirin 81mg Oral Tablet (QD)</h3>
+                                                <div class="medication-alerts">
+                                                    <strong>ALERTS</strong>
+                                                    <p>May increase risk of bleeding</p>
+                                                </div>
+                                                <div class="medication-recorded">
+                                                    <strong>RECORDED</strong>
+                                                    <p>04/09/2025 10:30 AM</p>
+                                                </div>
+                                                <div class="medication-notes">
+                                                    <strong>NOTES</strong>
+                                                    <p>Take Aspirin 81 mg PO daily – cardioprotection</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="medication-item" data-medication-id="7">
+                                        <div class="medication-header">
+                                            <div class="medication-number">+</div>
+                                            <div class="medication-name">Add medication</div>
+                                        </div>
+                                        <div class="medication-details">
+                                            <div class="medication-info">
+                                                <h3>Input medicine: <input type="text" placeholder="Medicine..."></input></h3>
+                                                <div class="medication-alerts">
+                                                    <strong>ALERTS</strong>
+                                                    <p>Input: <input type="text" placeholder="alert..."></input></p>
+                                                </div>
+                                                <div class="medication-recorded">
+                                                    <strong>RECORDED</strong>
+                                                    <p>Input: <input type="text" placeholder="recorded..."></input></p>
+                                                </div>
+                                                <div class="medication-notes">
+                                                    <strong>NOTES</strong>
+                                                    <p>Input: <input type="text" placeholder="notes..."></input></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        </div>
+
+
+    </div>
+
+</body>
+</html>
