@@ -297,6 +297,7 @@
       height: 765px;
       box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
     }
+   
 
     .vital-signs h2 {
       grid-column: span 2;
@@ -443,6 +444,28 @@
     font-size: 12px;
     transition: transform 0.3s ease-in-out;
 }
+.history-log {
+    width: 100%;
+    height: 120px;
+    font-size: 12px;
+    text-align: left;
+    overflow-y: auto;
+    margin-top: 5px;
+  }
+  
+  .history-item {
+    padding: 4px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .history-time {
+    font-weight: bold;
+    color: var(--base-color);
+  }
+  
+  .history-value {
+    color: #333;
+  }
 
 .patient-number:hover{
     color: var(--base-color);
@@ -692,6 +715,13 @@
           </div>
           <div class="status" id="o2Status"></div>
         </div>
+        <div class="card" id="historyCard" 
+          <i class="fas fa-history"></i>
+          <div class="title">Vital Signs History</div>
+          <div class="history-log" id="historyLog">
+            <div class="history-item">No updates yet</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -861,6 +891,118 @@ if (isNaN(oxygenVal) || oxygenVal <= 0) {
         openBtn.style.right = "403px";
       }
     }
+    function updateVitalSignsHistory(vitalType, oldValue, newValue) {
+    const historyLog = document.getElementById("historyLog");
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const dateString = now.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+    
+    // Create history entry
+    const historyItem = document.createElement("div");
+    historyItem.className = "history-item";
+    
+    // Format the message based on vital type
+    let message = '';
+    switch(vitalType) {
+      case 'temp':
+        message = `Temperature updated: ${oldValue}°C → ${newValue}°C`;
+        break;
+      case 'heart':
+        message = `Heart Rate updated: ${oldValue} bpm → ${newValue} bpm`;
+        break;
+      case 'bp':
+        message = `Blood Pressure updated: ${oldValue} → ${newValue} mmHg`;
+        break;
+      case 'rr':
+        message = `Respiratory Rate updated: ${oldValue} bpm → ${newValue} bpm`;
+        break;
+      case 'o2':
+        message = `O2 Saturation updated: ${oldValue}% → ${newValue}%`;
+        break;
+      default:
+        message = `${vitalType} updated: ${oldValue} → ${newValue}`;
+    }
+    
+    historyItem.innerHTML = `<span class="history-time">${timeString} (${dateString})</span>: <span class="history-value">${message}</span>`;
+    
+    // Add new entry at the top
+    if (historyLog.firstChild && historyLog.firstChild.textContent === "No updates yet") {
+      historyLog.innerHTML = '';
+    }
+    historyLog.insertBefore(historyItem, historyLog.firstChild);
+  }
+  
+  // Modify the existing input event listeners to track history
+  document.getElementById("tempInput").addEventListener("change", function() {
+    const oldVal = this.defaultValue;
+    const newVal = this.value;
+    if (oldVal !== newVal) {
+      updateVitalSignsHistory('temp', oldVal, newVal);
+      this.defaultValue = newVal;
+    }
+  });
+  
+  document.getElementById("heartInput").addEventListener("change", function() {
+    const oldVal = this.defaultValue;
+    const newVal = this.value;
+    if (oldVal !== newVal) {
+      updateVitalSignsHistory('heart', oldVal, newVal);
+      this.defaultValue = newVal;
+    }
+  });
+  
+  document.getElementById("rrInput").addEventListener("change", function() {
+    const oldVal = this.defaultValue;
+    const newVal = this.value;
+    if (oldVal !== newVal) {
+      updateVitalSignsHistory('rr', oldVal, newVal);
+      this.defaultValue = newVal;
+    }
+  });
+  
+  document.getElementById("o2Input").addEventListener("change", function() {
+    const oldVal = this.defaultValue;
+    const newVal = this.value;
+    if (oldVal !== newVal) {
+      updateVitalSignsHistory('o2', oldVal, newVal);
+      this.defaultValue = newVal;
+    }
+  });
+  
+  // For blood pressure, we need to handle both systolic and diastolic
+  const bpSystolicInput = document.getElementById("bpSystolic");
+  const bpDiastolicInput = document.getElementById("bpDiastolic");
+  
+  bpSystolicInput.addEventListener("change", function() {
+    const oldSys = bpSystolicInput.defaultValue;
+    const oldDia = bpDiastolicInput.defaultValue;
+    const newSys = bpSystolicInput.value;
+    const newDia = bpDiastolicInput.value;
+    
+    if (oldSys !== newSys) {
+      updateVitalSignsHistory('bp', `${oldSys}/${oldDia}`, `${newSys}/${newDia}`);
+      bpSystolicInput.defaultValue = newSys;
+    }
+  });
+  
+  bpDiastolicInput.addEventListener("change", function() {
+    const oldSys = bpSystolicInput.defaultValue;
+    const oldDia = bpDiastolicInput.defaultValue;
+    const newSys = bpSystolicInput.value;
+    const newDia = bpDiastolicInput.value;
+    
+    if (oldDia !== newDia) {
+      updateVitalSignsHistory('bp', `${oldSys}/${oldDia}`, `${newSys}/${newDia}`);
+      bpDiastolicInput.defaultValue = newDia;
+    }
+  });
+  
+  // Initialize default values for all inputs to track changes
+  window.addEventListener('load', function() {
+    document.querySelectorAll('input').forEach(input => {
+      input.defaultValue = input.value;
+    });
+  });
 
     function calculateBMI() {
       const weight = parseFloat(document.getElementById("weight").value);
