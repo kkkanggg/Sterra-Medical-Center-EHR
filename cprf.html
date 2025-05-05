@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="cprf.css">
-    <link rel="stylesheet" href="db.css">
+    
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel="stylesheet">
     <title>PATIENT REFERRAL FORM</title>
     <script>
@@ -159,11 +159,7 @@
                     <div class="form-row">
                         <label>Date:</label>
                         <div class="date-inputs">
-                            <input type="text" placeholder="/" class="date-input" />
-                            <span>/</span>
-                            <input type="text" placeholder="/" class="date-input" />
-                            <span>/</span>
-                            <input type="text" placeholder="/" class="date-input" />
+                            <input type="date" placeholder="Select date" />
                         </div>
                     </div>
                     
@@ -179,6 +175,13 @@
                             <option value="Rheumatology">Rheumatology</option>
                             <option value="Endocrinology">Endocrinology</option>
                             <option value="Oncology">Oncology</option>
+                            <option value="Outpatient">Outpatient</option>
+                            <option value="Inpatient">Inpatient</option>
+                            <option value="Consultation">Consultation</option>
+                            <option value="Emergency/Urgent">Emergency/Urgent</option>
+                            <option value="Diagnostic Test">Diagnostic Test</option>
+                            <option value="Telemedicine">Telemedicine</option>
+                            <option value="Follow-up">Follow-up</option>
                         </select>
                     </div>
                     <div class="form-row two-col">
@@ -209,6 +212,14 @@
                         <label>Referring from:</label>
                         <select class="full-width" style="padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
                             <option value="" disabled selected>Name of facility</option>
+                            <option value="Cardiology">Cardiology</option>
+                            <option value="Neurology">Neurology</option>
+                            <option value="Pulmonology">Pulmonology</option>
+                            <option value="Gastroenterology">Gastroenterology</option>
+                            <option value="Nephrology">Nephrology</option>
+                            <option value="Rheumatology">Rheumatology</option>
+                            <option value="Endocrinology">Endocrinology</option>
+                            <option value="Oncology">Oncology</option>
                             <option value="Outpatient">Outpatient</option>
                             <option value="Inpatient">Inpatient</option>
                             <option value="Consultation">Consultation</option>
@@ -260,7 +271,7 @@
                         </tr>
                         <tr>
                             <td><label>Date of Birth:</label></td>
-                            <td><input type="text" placeholder="dd/mm/yy" /></td>
+                            <td><input type="date" placeholder="dd/mm/yy" /></td>
                             <td><label>Gender:</label></td>
                             <td><input type="text" placeholder="" /></td>
                         </tr>
